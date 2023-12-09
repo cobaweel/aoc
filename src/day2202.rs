@@ -22,7 +22,7 @@ fn part2(input: &str) -> u32 {
 }
 
 #[derive(Copy, Clone)]
-enum RPS {
+enum Rps {
     Rock,
     Paper,
     Scissors,
@@ -34,8 +34,8 @@ enum Outcome {
     Win,
 }
 
-fn rps(v: &str) -> RPS {
-    use RPS::*;
+fn rps(v: &str) -> Rps {
+    use Rps::*;
     match v {
         "X" | "A" => Rock,
         "Y" | "B" => Paper,
@@ -44,8 +44,8 @@ fn rps(v: &str) -> RPS {
     }
 }
 
-fn battle(p: &RPS, q: &RPS) -> u32 {
-    use RPS::*;
+fn battle(p: &Rps, q: &Rps) -> u32 {
+    use Rps::*;
     match (p, q) {
         (Rock, Rock) => 3,
         (Paper, Paper) => 3,
@@ -57,8 +57,8 @@ fn battle(p: &RPS, q: &RPS) -> u32 {
     }
 }
 
-fn base(p: &RPS) -> u32 {
-    use RPS::*;
+fn base(p: &Rps) -> u32 {
+    use Rps::*;
     match p {
         Rock => 1,
         Paper => 2,
@@ -66,16 +66,16 @@ fn base(p: &RPS) -> u32 {
     }
 }
 
-fn parse_line1(line: &str) -> (RPS, RPS) {
+fn parse_line1(line: &str) -> (Rps, Rps) {
     let (p, q) = line.split_once(' ').expect("syntax");
     (rps(p), rps(q))
 }
 
-fn score1(p: &RPS, q: &RPS) -> u32 {
+fn score1(p: &Rps, q: &Rps) -> u32 {
     base(q) + battle(q, p)
 }
 
-fn parse_line2(line: &str) -> (RPS, Outcome) {
+fn parse_line2(line: &str) -> (Rps, Outcome) {
     use Outcome::*;
     let (p, q) = line.split_once(' ').expect("syntax");
     (
@@ -89,9 +89,9 @@ fn parse_line2(line: &str) -> (RPS, Outcome) {
     )
 }
 
-fn score2(p: &RPS, outcome: &Outcome) -> u32 {
+fn score2(p: &Rps, outcome: &Outcome) -> u32 {
     use Outcome::*;
-    use RPS::*;
+    use Rps::*;
     let q = match (p, outcome) {
         (Rock, Draw) => Rock,
         (Paper, Draw) => Paper,

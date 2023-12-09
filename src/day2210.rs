@@ -46,7 +46,7 @@ impl Program {
         Self { ops }
     }
 
-    fn as_micro_instructions(self) -> impl Iterator<Item = i32> {
+    fn into_micro_instructions(self) -> impl Iterator<Item = i32> {
         self.ops.into_iter().flat_map(|op| match op {
             Op::Noop => vec![0],
             Op::Addx(i) => vec![0, i],
@@ -85,7 +85,7 @@ fn part1(program: Program) -> i32 {
 fn run(program: Program) -> impl Iterator<Item = i32> {
     let mut x = 1;
     program
-        .as_micro_instructions()
+        .into_micro_instructions()
         .map(move |i| {
             x += i;
             x - i

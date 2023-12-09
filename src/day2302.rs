@@ -20,7 +20,12 @@ fn part1(input: &str) -> u32 {
                 .fold(Counter::default(), |max_counter, counter| {
                     max_counter.update_max(&counter)
                 })
-                .fits_inside(&limit_counter) { id } else { 0 }
+                .fits_inside(&limit_counter)
+            {
+                id
+            } else {
+                0
+            }
         })
         .sum()
 }
@@ -55,7 +60,7 @@ impl Counter {
         match color {
             "red" => self.red += count,
             "green" => self.green += count,
-            "blue" | _ => self.blue += count,
+            _ => self.blue += count,
         }
     }
 

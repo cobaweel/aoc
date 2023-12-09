@@ -36,7 +36,7 @@ impl FromStr for Move {
                     "R" => Move(Direction::R, dist),
                     "L" => Move(Direction::L, dist),
                     "U" => Move(Direction::U, dist),
-                    "D" | _ => Move(Direction::D, dist),
+                    _ => Move(Direction::D, dist),
                 }
             })
             .ok_or(anyhow!("oops"))

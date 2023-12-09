@@ -104,7 +104,7 @@ impl Shift {
 }
 
 impl Overlap {
-    fn overlap(huge: &Interval, tiny: &Interval) -> Self {
+    fn compute(huge: &Interval, tiny: &Interval) -> Self {
         let this = Interval::new(
             huge.lb.clamp(tiny.lb, tiny.ub),
             huge.ub.clamp(tiny.lb, tiny.ub),
@@ -141,7 +141,7 @@ fn part2(Almanac { starts, shiftses }: Almanac) -> i64 {
         let mut new_intervals: VecDeque<Interval> = std::iter::empty().collect();
         'outer: while let Some(old_interval) = old_intervals.pop_front() {
             for &shift in shifts.iter() {
-                let mut overlap = Overlap::overlap(&old_interval, &shift.src);
+                let mut overlap = Overlap::compute(&old_interval, &shift.src);
                 if let Some(ref mut the_match) = overlap.curr {
                     shift.shift_interval(the_match);
                     new_intervals.push_back(*the_match);
