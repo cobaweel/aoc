@@ -95,7 +95,7 @@ fn run(program: Program) -> impl Iterator<Item = i32> {
 
 fn draw_scan_line(line: impl Iterator<Item = i32>) -> String {
     line.zip(0..)
-        .map(|(sprite_pos,i)| {
+        .map(|(sprite_pos, i)| {
             let i = i as i32;
             if (sprite_pos - 1..=sprite_pos + 1).contains(&i) {
                 '#'
@@ -112,6 +112,6 @@ fn part2(program: Program) -> String {
         .into_iter()
         .map(draw_scan_line)
         .join("\n");
-    println!("{}",screen);
+    println!("{}", screen);
     screen
 }

@@ -1,5 +1,5 @@
-use itertools::Itertools as _;
 use anyhow::Error;
+use itertools::Itertools as _;
 use std::*;
 
 #[test]
@@ -33,7 +33,7 @@ impl str::FromStr for Input {
     }
 }
 
-fn parse_numbers(s: &str) -> Result<Vec<Number>,Error> {
+fn parse_numbers(s: &str) -> Result<Vec<Number>, Error> {
     let mut out = vec![];
     let re = regex::Regex::new(r"\d+")?;
     for (x, line) in s.lines().enumerate() {

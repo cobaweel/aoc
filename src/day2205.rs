@@ -38,10 +38,7 @@ fn part2(input: &str) -> String {
 }
 
 fn get_tops(piles: Vec<Vec<char>>) -> String {
-    piles
-        .into_iter()
-        .flat_map(|mut pile| pile.pop())
-        .join("")
+    piles.into_iter().flat_map(|mut pile| pile.pop()).join("")
 }
 
 fn parse_moves(input: &str) -> impl Iterator<Item = Move> + '_ {

@@ -7,7 +7,7 @@ fn test() {
     test(part1, 220701, 95437);
     test(part1, 220700, 1555642);
     test(part2, 220701, 24933642);
-    test(part2, 220700,0);
+    test(part2, 220700, 5974547);
 }
 
 fn part1(input: &str) -> usize {

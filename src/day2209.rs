@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use itertools::Itertools;
-use std::{fmt::Display, ops::AddAssign, str::FromStr};
 use std::collections::HashSet;
+use std::{fmt::Display, ops::AddAssign, str::FromStr};
 
 #[test]
 fn test() {
@@ -84,7 +84,6 @@ fn lead(point: &mut (i32, i32), direction: &Direction) {
 }
 
 fn part2(_input: &str) -> usize {
-    
     todo!()
 }
 

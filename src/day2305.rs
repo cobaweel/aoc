@@ -1,5 +1,6 @@
-use itertools::Itertools as _;
 use crate::util::parse_and_test;
+use itertools::Itertools as _;
+use nom::Err;
 use std::{collections::VecDeque, fmt::Display, ops::Range, str::FromStr};
 
 #[test]
@@ -40,25 +41,28 @@ impl FromStr for Almanac {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         use crate::util::parse_with_nom::*;
 
-        let shift = tuple((i64, space1, i64, space1, i64));
-        let shift = shift.map(|(src, _, dst, _, len)| Shift::new(src, dst, len));
-        let header = || many_till(none_of(":"), tag(":")).and(space0);
-        let shifts = preceded(header(), separated_list1(multispace1, shift));
+        let header = || many_till(none_of(":"), tag(":")).and(multispace0);
+        let header = || preceded(header(), success(()));
         let starts = preceded(header(), separated_list1(space1, i64));
-        let shiftses = many1(shifts);
-        let almanac = || tuple((starts, shiftses)).map(Almanac::from);
-        let almanac = almanac().parse(s).munch()?;
-        Ok(almanac)
+        let shift = separated_list1(space1, i64);
+        let shift = map_opt(shift, |v| v.into_iter().collect_tuple());
+        let shift = shift.map(|(dst, src, len)| Shift::new(src, dst, len));
+        let shifts = preceded(header(), separated_list1(multispace1, shift));
+        let shiftses = separated_list1(multispace1, shifts);
+        let almanac = tuple((starts, shiftses)).map(Almanac::from);
+        let almanac = terminated(almanac, tuple((multispace0, eof)));
+        let anyhow = almanac.anyhow(s);
+        anyhow
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct Interval {
     lb: i64,
     ub: i64,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct Shift {
     src: Interval,
     dst: Interval,
@@ -113,19 +117,14 @@ impl Overlap {
     }
 }
 
-fn part1(
-    Almanac {
-        starts,
-        shiftses: mappingses,
-    }: Almanac,
-) -> i64 {
+fn part1(Almanac { starts, shiftses }: Almanac) -> i64 {
     let mut starts = starts;
-    for mappings in mappingses.iter() {
+    for shifts in shiftses.iter() {
         for start in starts.iter_mut() {
-            mappings
+            shifts
                 .iter()
-                .find(|m| m.src.contains(start))
-                .map(|m| m.shift(start));
+                .find(|shift| shift.src.contains(start))
+                .map(|shift| shift.shift(start));
         }
     }
     starts.into_iter().min().unwrap_or(0)
