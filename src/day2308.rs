@@ -173,7 +173,6 @@ fn solve((off1, period1): (usize, usize), (off2, period2): (usize, usize)) -> (u
 }
 
 fn part2(instructions: Instructions) -> i64 {
-    let n_turns = instructions.turns.len();
     let nodes = instructions.nodes.iter();
     let path_infos = nodes
         .map(|node| node.this.as_str())
