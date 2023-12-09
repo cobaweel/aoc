@@ -16,13 +16,11 @@ fn part1(input: &str) -> u32 {
         .map(parse)
         .zip(1..)
         .map(|(counters, id)| {
-            counters
+            if counters
                 .fold(Counter::default(), |max_counter, counter| {
                     max_counter.update_max(&counter)
                 })
-                .fits_inside(&limit_counter)
-                .then_some(id)
-                .unwrap_or(0)
+                .fits_inside(&limit_counter) { id } else { 0 }
         })
         .sum()
 }
@@ -81,7 +79,7 @@ impl Counter {
 fn parse(line: &str) -> impl Iterator<Item = Counter> + '_ {
     line.split(|c| ":;".contains(c)).skip(1).map(|sample_str| {
         let mut sample = Counter::default();
-        sample_str.split(",").for_each(|count_and_color| {
+        sample_str.split(',').for_each(|count_and_color| {
             count_and_color
                 .split_ascii_whitespace()
                 .collect_tuple()

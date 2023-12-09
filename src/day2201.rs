@@ -16,7 +16,7 @@ fn part2(input: &str) -> u32 {
 }
 
 fn sum_top(input: &str, n: usize) -> u32 {
-    let mut xs = parse(input.as_ref())
+    let mut xs = parse(input)
         .into_iter()
         .map(|v| v.into_iter().sum::<u32>())
         .collect::<Vec<_>>();

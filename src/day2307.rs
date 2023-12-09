@@ -42,7 +42,7 @@ impl Hands {
 
     fn winnings(&mut self, key: fn(&Hand) -> (HandType, Vec<i64>)) -> i64 {
         let hands = self.hands.iter();
-        let hands = hands.map(|hand| (key(hand), hand.bid)).sorted().into_iter();
+        let hands = hands.map(|hand| (key(hand), hand.bid)).sorted();
         let hands = hands.zip(1..);
         hands.map(|((_, bid), rank)| bid * rank).sum()
     }

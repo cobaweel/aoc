@@ -40,7 +40,7 @@ fn intersect(sets: &[&str]) -> char {
     use std::{collections::HashSet, iter};
     let mut common: HashSet<char> = iter::empty().collect();
     common.extend(sets[0].chars());
-    for set in sets[1..].into_iter() {
+    for set in sets[1..].iter() {
         common.retain(|&c| set.contains(c));
     }
     *common.iter().next().expect("exactly 1 overlap")

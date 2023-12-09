@@ -51,8 +51,8 @@ impl FromStr for Almanac {
         let shiftses = separated_list1(multispace1, shifts);
         let almanac = tuple((starts, shiftses)).map(Almanac::from);
         let almanac = terminated(almanac, tuple((multispace0, eof)));
-        let anyhow = almanac.anyhow(s);
-        anyhow
+        
+        almanac.anyhow(s)
     }
 }
 
@@ -121,10 +121,9 @@ fn part1(Almanac { starts, shiftses }: Almanac) -> i64 {
     let mut starts = starts;
     for shifts in shiftses.iter() {
         for start in starts.iter_mut() {
-            shifts
+            if let Some(shift) = shifts
                 .iter()
-                .find(|shift| shift.src.contains(start))
-                .map(|shift| shift.shift(start));
+                .find(|shift| shift.src.contains(start)) { shift.shift(start) }
         }
     }
     starts.into_iter().min().unwrap_or(0)

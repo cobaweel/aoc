@@ -67,17 +67,17 @@ fn base(p: &RPS) -> u32 {
 }
 
 fn parse_line1(line: &str) -> (RPS, RPS) {
-    let (p, q) = line.split_once(" ").expect("syntax");
+    let (p, q) = line.split_once(' ').expect("syntax");
     (rps(p), rps(q))
 }
 
 fn score1(p: &RPS, q: &RPS) -> u32 {
-    base(&q) + battle(&q, &p)
+    base(q) + battle(q, p)
 }
 
 fn parse_line2(line: &str) -> (RPS, Outcome) {
     use Outcome::*;
-    let (p, q) = line.split_once(" ").expect("syntax");
+    let (p, q) = line.split_once(' ').expect("syntax");
     (
         rps(p),
         match q {
@@ -103,5 +103,5 @@ fn score2(p: &RPS, outcome: &Outcome) -> u32 {
         (Paper, Lose) => Rock,
         (Scissors, Lose) => Paper,
     };
-    base(&q) + battle(&q, &p)
+    base(&q) + battle(&q, p)
 }

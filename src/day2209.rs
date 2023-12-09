@@ -88,5 +88,5 @@ fn part2(_input: &str) -> usize {
 }
 
 fn parse(input: &str) -> impl Iterator<Item = Move> + '_ {
-    input.lines().map(|line| line.parse::<Move>()).flatten()
+    input.lines().flat_map(|line| line.parse::<Move>())
 }

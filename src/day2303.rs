@@ -27,8 +27,8 @@ impl str::FromStr for Input {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Input, Error> {
-        let grid = parse_grid(&s)?;
-        let numbers = parse_numbers(&s)?;
+        let grid = parse_grid(s)?;
+        let numbers = parse_numbers(s)?;
         Ok(Input { grid, numbers })
     }
 }

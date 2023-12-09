@@ -58,12 +58,11 @@ fn parse_moves(input: &str) -> impl Iterator<Item = Move> + '_ {
 fn parse_piles(input: &str) -> Vec<Vec<char>> {
     input
         .lines()
-        .filter(|line| line.trim_start().starts_with("["))
+        .filter(|line| line.trim_start().starts_with('['))
         .rev()
         .flat_map(|line| line.chars().dropping(1).step_by(4).enumerate())
         .filter(|(_, c)| c != &' ')
         .sorted_by_key(|(i, _)| *i)
-        .into_iter()
         .group_by(|(i, _)| *i)
         .into_iter()
         .map(|(_, group)| group.map(|(_, c)| c).collect_vec())
