@@ -62,8 +62,8 @@ impl std::str::FromStr for Program {
         let noop = tag("noop").map(|_| Op::Noop);
         let addx = preceded(tuple((tag("addx"), space1)), i32).map(Op::Addx);
         let op = alt((noop, addx));
-        let mut program = separated_list0(multispace1, op).map(Program::new);
-        program.parse(s).munch()
+        let program = separated_list0(multispace1, op).map(Program::new);
+        program.anyhow(s)
     }
 }
 

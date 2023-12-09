@@ -55,8 +55,8 @@ impl FromStr for Hands {
         use crate::util::parse_with_nom::*;
         let card = map_opt(none_of(" "), Card::parse);
         let hand = separated_pair(many1(card), space1, i64).map(Hand::from);
-        let mut hands = separated_list1(newline, hand).map(Hands::new);
-        hands.parse(s).munch()
+        let hands = separated_list1(newline, hand).map(Hands::new);
+        hands.anyhow(s)
     }
 }
 

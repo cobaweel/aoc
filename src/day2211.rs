@@ -110,8 +110,8 @@ impl FromStr for Monkeys {
         let monkey = preceded(label(), tuple((items, operation, decision)));
         let monkey = monkey.map(Monkey::from);
         let monkeys = terminated(many1(monkey), tuple((multispace0, eof)));
-        let monkeys = monkeys.map(Monkeys::new).parse(s).munch()?;
-        Ok(monkeys)
+        let monkeys = monkeys.map(Monkeys::new);
+        monkeys.anyhow(s)
     }
 }
 

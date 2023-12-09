@@ -51,7 +51,7 @@ impl FromStr for Records {
                 Records { records }
             })
         };
-        records().parse(s).munch()
+        records().anyhow(s)
     }
 }
 

@@ -60,17 +60,4 @@ pub mod parse_with_nom {
     }
 
     impl<'a, O, T> StrParser<'a, O> for T where T: Parser<&'a str, O, Error<&'a str>> {}
-
-    pub trait Muncher<O> {
-        fn munch(self) -> anyhow::Result<O>;
-    }
-
-    impl<'a, O> Muncher<O> for nom::IResult<&'a str, O> {
-        fn munch(self) -> anyhow::Result<O> {
-            let result = self.map_err(|e| e.to_owned());
-            let result = result.map(|(_, o)| o);
-            let result = result?;
-            Ok(result)
-        }
-    }
 }
