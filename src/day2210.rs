@@ -3,12 +3,12 @@ use ndarray::{Array1, Array2};
 
 #[test]
 fn test1() {
-    parse_and_test(part1, 221001, 13140);
+    aoc_parse_and_test(part1, 221001, 13140);
 }
 
 #[test]
 fn test2() {
-    parse_and_test(part1, 221000, 14780);
+    aoc_parse_and_test(part1, 221000, 14780);
 }
 
 #[test]
@@ -20,7 +20,7 @@ fn test3() {
 #####.....#####.....#####.....#####.....
 ######......######......######......####
 #######.......#######.......#######.....";
-    parse_and_test(part2, 221001, screen.to_string());
+    aoc_parse_and_test(part2, 221001, screen.to_string());
 }
 
 #[test]
@@ -32,7 +32,7 @@ fn test4() {
 #....#....###..#.....#...#.##..#...#....
 #....#....#....#....#....#..#.#....#....
 ####.####.#....####.####..###.####.####.";
-    parse_and_test(part2, 221000, screen.to_string());
+    aoc_parse_and_test(part2, 221000, screen.to_string());
 }
 
 #[derive(Debug, From)]

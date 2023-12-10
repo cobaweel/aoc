@@ -2,22 +2,22 @@ use crate::util::*;
 
 #[test]
 fn test1() {
-    parse_and_test(part1, 230401, 13);
+    aoc_parse_and_test(part1, 230401, 13);
 }
 
 #[test]
 fn test2() {
-    parse_and_test(part1, 230400, 19135);
+    aoc_parse_and_test(part1, 230400, 19135);
 }
 
 #[test]
 fn test3() {
-    parse_and_test(part2, 230401, 30);
+    aoc_parse_and_test(part2, 230401, 30);
 }
 
 #[test]
 fn test4() {
-    parse_and_test(part2, 230400, 5704953);
+    aoc_parse_and_test(part2, 230400, 5704953);
 }
 
 struct Cards(Vec<Card>);

@@ -2,8 +2,8 @@ use crate::util::*;
 
 #[test]
 fn test1() {
-    test(part1, 220901, 13);
-    test(part1, 220900, 6212);
+    aoc_test(part1, 220901, 13);
+    aoc_test(part1, 220900, 6212);
     // test(part2, 220901, 1);
     // test(part2, 220900, ());
 }

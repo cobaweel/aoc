@@ -2,22 +2,22 @@ use crate::util::*;
 
 #[test]
 fn test1() {
-    crate::util::parse_and_test(part1, 230801, 2);
+    crate::util::aoc_parse_and_test(part1, 230801, 2);
 }
 
 #[test]
 fn test2() {
-    crate::util::parse_and_test(part1, 230800, 16897);
+    crate::util::aoc_parse_and_test(part1, 230800, 16897);
 }
 
 #[test]
 fn test3() {
-    crate::util::parse_and_test(part2, 230802, 6);
+    crate::util::aoc_parse_and_test(part2, 230802, 6);
 }
 
 #[test]
 fn test4() {
-    crate::util::parse_and_test(part2, 230800, 16563603485021);
+    crate::util::aoc_parse_and_test(part2, 230800, 16563603485021);
 }
 
 #[derive(From)]

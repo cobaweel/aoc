@@ -2,10 +2,10 @@ use crate::util::*;
 
 #[test]
 fn test1() {
-    test(part1, 220201, 15);
-    test(part1, 220200, 10994);
-    test(part2, 220201, 12);
-    test(part2, 220200, 12526);
+    aoc_test(part1, 220201, 15);
+    aoc_test(part1, 220200, 10994);
+    aoc_test(part2, 220201, 12);
+    aoc_test(part2, 220200, 12526);
 }
 
 fn part1(input: &str) -> u32 {

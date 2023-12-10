@@ -4,7 +4,7 @@ pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 pub use std::fmt::{Debug, Display};
 pub use std::str::FromStr;
 
-pub fn test<T>(process: impl Fn(&str) -> T, input_number: u32, expected: T)
+pub fn aoc_test<T>(process: impl Fn(&str) -> T, input_number: u32, expected: T)
 where
     T: Eq + Debug,
 {
@@ -14,7 +14,7 @@ where
     assert_eq!(output, expected);
 }
 
-pub fn parse_and_test<I, T>(process: impl Fn(I) -> T, input_number: u32, expected: T)
+pub fn aoc_parse_and_test<I, T>(process: impl Fn(I) -> T, input_number: u32, expected: T)
 where
     I: FromStr,
     I::Err: Debug,
