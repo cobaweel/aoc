@@ -29,11 +29,11 @@ impl FromStr for Instructions {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         use crate::util::aoc_nom::*;
-        let left = tag("L").map(|_| Turn::L).id();
-        let right = tag("R").map(|_| Turn::R).id();
+        let left = tag("L").map(|_| Turn::L).into_str_parser();
+        let right = tag("R").map(|_| Turn::R).into_str_parser();
         let turn = alt((left, right));
         let turns = many1(turn);
-        let node = count(terminated(alphanumeric1, many1(one_of(" =(),"))), 3).id();
+        let node = count(terminated(alphanumeric1, many1(one_of(" =(),"))), 3).into_str_parser();
         let node = node.map(|ns| ns.into_iter().map(str::to_string));
         let node = into(map_opt(
             node,

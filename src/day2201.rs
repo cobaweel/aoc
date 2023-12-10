@@ -35,7 +35,7 @@ impl FromStr for Chart {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         use crate::util::aoc_nom::*;
         let calories = separated_list1(line_ending, u32);
-        let calories = separated_list1(many1(line_ending).id(), calories);
+        let calories = separated_list1(many1(line_ending).into_str_parser(), calories);
         into(calories).anyhow(s)
     }
 }
