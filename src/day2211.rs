@@ -61,7 +61,7 @@ impl FromStr for Monkeys {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use crate::util::parse_with_nom::*;
+        use crate::util::aoc_nom::*;
         let label = || tuple((many0(none_of(":")), tag(":"), space0));
         let items = preceded(label(), separated_list1(tag(", "), u64));
         let sqr = tag("* old").map(|_| Operation::Sqr);

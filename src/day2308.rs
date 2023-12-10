@@ -28,7 +28,7 @@ impl FromStr for Instructions {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use crate::util::parse_with_nom::*;
+        use crate::util::aoc_nom::*;
         let left = tag("L").map(|_| Turn::L).id();
         let right = tag("R").map(|_| Turn::R).id();
         let turn = alt((left, right));

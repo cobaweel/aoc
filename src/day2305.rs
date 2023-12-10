@@ -15,7 +15,7 @@ impl FromStr for Almanac {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use crate::util::parse_with_nom::*;
+        use crate::util::aoc_nom::*;
 
         let header = || many_till(none_of(":"), tag(":")).and(multispace0);
         let header = || preceded(header(), success(()));

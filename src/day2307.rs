@@ -35,7 +35,7 @@ impl FromStr for Hands {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use crate::util::parse_with_nom::*;
+        use crate::util::aoc_nom::*;
         let card = map_opt(none_of(" "), Card::parse);
         let hand = separated_pair(many1(card), space1, i64).map(Hand::from);
         let hands = separated_list1(newline, hand).map(Hands::new);

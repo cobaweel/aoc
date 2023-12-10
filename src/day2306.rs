@@ -23,7 +23,7 @@ impl FromStr for Records {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use crate::util::parse_with_nom::*;
+        use crate::util::aoc_nom::*;
         let prefix = || tuple((many1(none_of(":")), tag(":"), space1));
         let numbers = || preceded(prefix(), separated_list1(space1, i64));
         let records = || {

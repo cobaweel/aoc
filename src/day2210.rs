@@ -40,7 +40,7 @@ impl std::str::FromStr for Program {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use crate::util::parse_with_nom::*;
+        use crate::util::aoc_nom::*;
         let noop = tag("noop").map(|_| Op::Noop).id();
         let addx = preceded(tuple((tag("addx"), space1)), i32).map(Op::Addx);
         let op = alt((noop, addx));

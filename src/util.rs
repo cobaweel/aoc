@@ -4,38 +4,47 @@ pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 pub use std::fmt::{Debug, Display};
 pub use std::str::FromStr;
 
-use concat_idents::concat_idents;
-
+/// Create a sensibly named test case that invokes `aoc_run_test`. For instance,
+/// `aoc_test!(part1, 230101, 10)` would expand to:
+///
+/// ```notest
+/// #[test]
+/// fn test_part1_230101() {
+///     aoc_run_test(part1, 230101, 10);
+/// }
+/// ```
+///
 macro_rules! aoc_test {
-    ($part:ident, $input:expr, $val:expr) => {
-        concat_idents::concat_idents!(test_name = test_, $part, _, $input {
-            #[test]
-            fn test_name() {
-                aoc_test_running::aoc_run_parse_and_test($part, $input, $val);
-            }
-        });
-    };
-}
+        ($part:ident, $input:expr, $val:expr) => {
+            concat_idents::concat_idents!(test_name = test_, $part, _, $input {
+                #[test]
+                fn test_name() {
+                    aoc_run_test($part, $input, $val);
+                }
+            });
+        };
+    }
 pub(crate) use aoc_test;
 
-pub mod aoc_test_running {
-    use std::fmt::Debug;
-    use std::str::FromStr;
-
-    pub fn aoc_run_parse_and_test<I, T>(process: impl Fn(I) -> T, input_number: u32, expected: T)
-    where
-        I: FromStr,
-        I::Err: Debug,
-        T: Eq + Debug,
-    {
-        let input_path = format!("input/{input_number}.txt");
-        let input_string = std::fs::read_to_string(input_path).expect("cannot read test data");
-        let input = input_string.parse().expect("cannot parse test data");
-        assert_eq!(process(input), expected);
-    }
+/// This will:
+///
+/// 1. Read the input file "input/{input_number}.txt"
+/// 2. Parse the input file into some type T:FromStr
+/// 3. Run the process function on the parsed input
+/// 4. Assert that the result of the process function is equal to the expected value
+pub fn aoc_run_test<I, T>(process: impl Fn(I) -> T, input_number: u32, expected: T)
+where
+    I: FromStr,
+    I::Err: Debug,
+    T: Eq + Debug,
+{
+    let input_path = format!("input/{input_number}.txt");
+    let input_string = std::fs::read_to_string(input_path).expect("cannot read test data");
+    let input = input_string.parse().expect("cannot parse test data");
+    assert_eq!(process(input), expected);
 }
 
-pub mod parse_with_nom {
+pub mod aoc_nom {
     use nom::error::Error;
     pub use nom::{
         branch::*, bytes::complete::*, character::complete::*, combinator::*, multi::*, sequence::*,
