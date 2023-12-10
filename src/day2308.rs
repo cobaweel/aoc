@@ -66,7 +66,7 @@ impl FromStr for Instructions {
 }
 
 fn part1(instructions: Instructions) -> i64 {
-    let (n, _) = path(&instructions, &"AAA")
+    let (n, _) = path(&instructions, "AAA")
         .find_position(|&n| n == "ZZZ")
         .expect("camel got lost");
     n as i64

@@ -71,10 +71,6 @@ struct Overlap {
 }
 
 impl Interval {
-    fn new(lb: i64, ub: i64) -> Self {
-        Self { lb, ub }
-    }
-
     fn contains(&self, x: &i64) -> bool {
         (self.lb..self.ub).contains(x)
     }
@@ -82,8 +78,8 @@ impl Interval {
 
 impl Shift {
     fn new(src: i64, dst: i64, len: i64) -> Self {
-        let src = Interval::new(src, src + len);
-        let dst = Interval::new(dst, dst + len);
+        let src = (src, src + len).into();
+        let dst = (dst, dst + len).into();
         Self { src, dst }
     }
 
@@ -100,14 +96,14 @@ impl Shift {
 
 impl Overlap {
     fn compute(huge: &Interval, tiny: &Interval) -> Self {
-        let this = Interval::new(
+        let this = Interval::from((
             huge.lb.clamp(tiny.lb, tiny.ub),
             huge.ub.clamp(tiny.lb, tiny.ub),
-        );
+        ));
         Self {
-            prev: (huge.lb < this.lb).then_some(Interval::new(huge.lb, this.lb)),
-            curr: (this.lb < this.ub).then_some(Interval::new(this.lb, this.ub)),
-            next: (this.ub < huge.ub).then_some(Interval::new(this.ub, huge.ub)),
+            prev: (huge.lb < this.lb).then_some(Interval::from((huge.lb, this.lb))),
+            next: (this.ub < huge.ub).then_some(Interval::from((this.ub, huge.ub))),
+            curr: (this.lb < this.ub).then_some(Interval::from((this.lb, this.ub))),
         }
     }
 }
@@ -130,7 +126,7 @@ fn part2(Almanac { starts, shiftses }: Almanac) -> i64 {
         .chunks(2)
         .into_iter()
         .flat_map(|chunk| chunk.into_iter().collect_tuple())
-        .map(|(lb, len)| Interval::new(lb, lb + len))
+        .map(|(lb, len)| (lb, lb + len).into())
         .collect();
     for shifts in shiftses {
         let mut new_intervals: VecDeque<Interval> = std::iter::empty().collect();

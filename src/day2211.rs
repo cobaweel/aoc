@@ -1,3 +1,4 @@
+use derive_more::From;
 use itertools::Itertools as _;
 use nom::character::streaming::anychar;
 use std::str::FromStr;
@@ -22,7 +23,7 @@ fn test4() {
     crate::util::parse_and_test(part2, 221100, 15447387620);
 }
 
-#[derive(Debug)]
+#[derive(Debug, From)]
 struct Monkeys {
     monkeys: Vec<Monkey>,
 }
@@ -33,7 +34,7 @@ impl Monkeys {
     }
 }
 
-#[derive(Debug, derive_more::From)]
+#[derive(Debug, From)]
 struct Monkey {
     items: Vec<u64>,
     operation: Operation,
@@ -90,7 +91,7 @@ impl FromStr for Monkeys {
         let monkey = preceded(label(), tuple((items, operation, decision)));
         let monkey = monkey.map(Monkey::from);
         let monkeys = terminated(many1(monkey), tuple((multispace0, eof)));
-        let monkeys = monkeys.map(Monkeys::new);
+        let monkeys = monkeys.map(Monkeys::from);
         monkeys.anyhow(s)
     }
 }
