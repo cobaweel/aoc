@@ -1,5 +1,4 @@
 use crate::util::*;
-use ndarray::{Array1, Array2};
 
 const RESULT1: &str = "\
 ##..##..##..##..##..##..##..##..##..##..

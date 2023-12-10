@@ -62,4 +62,3 @@ fn foldcast(history: History, f: impl Fn(i64, Vec<i64>) -> i64) -> i64 {
         .rev()
         .fold(0, f)
 }
-
