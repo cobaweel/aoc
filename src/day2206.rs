@@ -1,8 +1,7 @@
 use crate::util::*;
 
 #[test]
-fn test() {
-    use crate::util::test;
+fn test1() {
     test(part1, 220601, 7);
     test(part1, 220600, 1361);
     test(part2, 220601, 19);

@@ -4,8 +4,7 @@ use dyn_iter::DynIter;
 use dyn_iter::IntoDynIterator as _;
 
 #[test]
-fn test() {
-    use crate::util::test;
+fn test1() {
     // test(part1, 220801, 21);
     // test(part1, 220800, 1719);
     // test(part2, 220801, ());

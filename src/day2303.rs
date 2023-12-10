@@ -1,7 +1,7 @@
 use crate::util::*;
 
 #[test]
-fn test() {
+fn test1() {
     use crate::util::parse_and_test;
     parse_and_test(part1, 230301, 4361);
     parse_and_test(part1, 230300, 525181);

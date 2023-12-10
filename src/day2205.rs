@@ -1,8 +1,7 @@
 use crate::util::*;
 
 #[test]
-fn test() {
-    use crate::util::test;
+fn test1() {
     test(part1, 220501, "CMZ".to_string());
     test(part1, 220500, "PTWLTDSJV".to_string());
     test(part2, 220501, "MCD".to_string());
