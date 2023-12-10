@@ -1,4 +1,5 @@
 use crate::util::parse_and_test;
+use derive_more::From;
 use itertools::Itertools as _;
 use ndarray::{Array1, Array2};
 
@@ -36,16 +37,12 @@ fn test4() {
     parse_and_test(part2, 221000, screen.to_string());
 }
 
-#[derive(Debug)]
+#[derive(Debug, From)]
 struct Program {
     ops: Vec<Op>,
 }
 
 impl Program {
-    fn new(ops: Vec<Op>) -> Self {
-        Self { ops }
-    }
-
     fn into_micro_instructions(self) -> impl Iterator<Item = i32> {
         self.ops.into_iter().flat_map(|op| match op {
             Op::Noop => vec![0],
@@ -59,10 +56,10 @@ impl std::str::FromStr for Program {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         use crate::util::parse_with_nom::*;
-        let noop = tag("noop").map(|_| Op::Noop);
+        let noop = tag("noop").map(|_| Op::Noop).id();
         let addx = preceded(tuple((tag("addx"), space1)), i32).map(Op::Addx);
         let op = alt((noop, addx));
-        let program = separated_list0(multispace1, op).map(Program::new);
+        let program = into(separated_list0(multispace1, op));
         program.anyhow(s)
     }
 }
@@ -84,12 +81,10 @@ fn part1(program: Program) -> i32 {
 
 fn run(program: Program) -> impl Iterator<Item = i32> {
     let mut x = 1;
-    program
-        .into_micro_instructions()
-        .map(move |i| {
-            x += i;
-            x - i
-        })
+    program.into_micro_instructions().map(move |i| {
+        x += i;
+        x - i
+    })
 }
 
 fn draw_scan_line(line: impl Iterator<Item = i32>) -> String {

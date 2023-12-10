@@ -60,7 +60,7 @@ impl FromStr for Hands {
     }
 }
 
-#[derive(Eq, Ord, PartialEq, PartialOrd, Debug)]
+#[derive(Eq, Ord, PartialEq, PartialOrd, Debug, derive_more::From)]
 struct Hand {
     cards: Vec<Card>,
     bid: i64,
@@ -75,12 +75,6 @@ enum HandType {
     FullHouse,
     FourOfAKind,
     FiveOfAKind,
-}
-
-impl From<(Vec<Card>, i64)> for Hand {
-    fn from((cards, bid): (Vec<Card>, i64)) -> Self {
-        Hand { cards, bid }
-    }
 }
 
 impl Hand {

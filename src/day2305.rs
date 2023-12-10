@@ -1,4 +1,5 @@
 use crate::util::parse_and_test;
+use derive_more::From;
 use itertools::Itertools as _;
 use nom::Err;
 use std::{collections::VecDeque, fmt::Display, ops::Range, str::FromStr};
@@ -23,16 +24,10 @@ fn test4() {
     parse_and_test(part2, 230500, 5200543);
 }
 
-#[derive(Clone, Debug)]
+#[derive(From, Clone, Debug)]
 struct Almanac {
     starts: Vec<i64>,
     shiftses: Vec<Vec<Shift>>,
-}
-
-impl From<(Vec<i64>, Vec<Vec<Shift>>)> for Almanac {
-    fn from((starts, shiftses): (Vec<i64>, Vec<Vec<Shift>>)) -> Self {
-        Almanac { starts, shiftses }
-    }
 }
 
 impl FromStr for Almanac {
@@ -51,12 +46,12 @@ impl FromStr for Almanac {
         let shiftses = separated_list1(multispace1, shifts);
         let almanac = tuple((starts, shiftses)).map(Almanac::from);
         let almanac = terminated(almanac, tuple((multispace0, eof)));
-        
+
         almanac.anyhow(s)
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, From)]
 struct Interval {
     lb: i64,
     ub: i64,
@@ -121,9 +116,9 @@ fn part1(Almanac { starts, shiftses }: Almanac) -> i64 {
     let mut starts = starts;
     for shifts in shiftses.iter() {
         for start in starts.iter_mut() {
-            if let Some(shift) = shifts
-                .iter()
-                .find(|shift| shift.src.contains(start)) { shift.shift(start) }
+            if let Some(shift) = shifts.iter().find(|shift| shift.src.contains(start)) {
+                shift.shift(start)
+            }
         }
     }
     starts.into_iter().min().unwrap_or(0)

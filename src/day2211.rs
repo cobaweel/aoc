@@ -33,21 +33,11 @@ impl Monkeys {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, derive_more::From)]
 struct Monkey {
     items: Vec<u64>,
     operation: Operation,
     decision: Decision,
-}
-
-impl From<(Vec<u64>, Operation, Decision)> for Monkey {
-    fn from((items, operation, decision): (Vec<u64>, Operation, Decision)) -> Self {
-        Monkey {
-            items,
-            operation,
-            decision,
-        }
-    }
 }
 
 #[derive(Debug)]
@@ -67,21 +57,11 @@ impl Operation {
     }
 }
 
-#[derive(Debug)]
+#[derive(derive_more::From, Debug)]
 struct Decision {
     divisor: u64,
     if_yes: u64,
     if_no: u64,
-}
-
-impl From<(u64, u64, u64)> for Decision {
-    fn from((divisor, if_yes, if_no): (u64, u64, u64)) -> Self {
-        Decision {
-            divisor,
-            if_yes,
-            if_no,
-        }
-    }
 }
 
 impl Decision {

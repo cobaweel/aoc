@@ -1,3 +1,4 @@
+use derive_more::From;
 use itertools::Itertools;
 use std::{
     collections::{HashMap, HashSet},
@@ -24,6 +25,7 @@ fn test4() {
     crate::util::parse_and_test(part2, 230800, 16563603485021);
 }
 
+#[derive(From)]
 struct Instructions {
     turns: Vec<Turn>,
     nodes: Vec<Node>,
@@ -35,6 +37,7 @@ enum Turn {
     L,
 }
 
+#[derive(From)]
 struct Node {
     this: String,
     left: String,
@@ -52,11 +55,12 @@ impl FromStr for Instructions {
         let turns = many1(turn);
         let node = count(terminated(alphanumeric1, many1(one_of(" =(),"))), 3).id();
         let node = node.map(|ns| ns.into_iter().map(str::to_string));
-        let node = map_opt(node, Itertools::collect_tuple);
-        let node = node.map(|(this, left, right)| Node { this, left, right });
+        let node = into(map_opt(
+            node,
+            Itertools::collect_tuple::<(String, String, String)>,
+        ));
         let nodes = separated_list1(multispace1, node);
-        let instructions = separated_pair(turns, multispace1, nodes);
-        let instructions = instructions.map(|(turns, nodes)| Instructions { turns, nodes });
+        let instructions = into(separated_pair(turns, multispace1, nodes));
         instructions.anyhow(s)
     }
 }
@@ -99,7 +103,6 @@ struct PathInfo {
     end_points: HashSet<usize>,
 }
 
-
 impl PathInfo {
     /// Compute the `PathInfo` for a given starting node
     fn compute<'a>(instructions: &'a Instructions, name: &'a str) -> Option<Self> {
@@ -125,8 +128,6 @@ impl PathInfo {
         }
         None
     }
-
-    
 
     /// Figure out whether the `i`-th node is an end node
     fn is_end_point(&self, i: usize) -> bool {

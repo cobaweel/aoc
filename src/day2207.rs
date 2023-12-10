@@ -12,10 +12,7 @@ fn test() {
 
 fn part1(input: &str) -> usize {
     let size_by_name = get_size_by_name(input);
-    size_by_name
-        .values()
-        .filter(|v| v <= &&100000)
-        .sum()
+    size_by_name.values().filter(|v| v <= &&100000).sum()
 }
 
 fn part2(input: &str) -> usize {

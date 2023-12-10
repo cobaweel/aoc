@@ -1,4 +1,5 @@
 use crate::util::parse_and_test;
+use derive_more::From;
 use itertools::{izip, Itertools};
 use std::{array::IntoIter, str::FromStr};
 
@@ -55,15 +56,10 @@ impl FromStr for Records {
     }
 }
 
+#[derive(From)]
 struct Record {
     time: i64,
     distance: i64,
-}
-
-impl From<(i64, i64)> for Record {
-    fn from((time, distance): (i64, i64)) -> Self {
-        Record { time, distance }
-    }
 }
 
 fn part1(records: Records) -> i64 {
