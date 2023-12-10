@@ -1,4 +1,4 @@
-pub use derive_more::From;
+pub use derive_more::{From,Into};
 pub use itertools::Itertools;
 pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 pub use std::fmt::{Debug, Display};

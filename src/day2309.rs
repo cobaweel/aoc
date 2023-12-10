@@ -34,7 +34,7 @@ fn part2(oasis: Oasis) -> i64 {
     oasis.histories.into_iter().map(hindcast).sum()
 }
 
-fn differentiate(values: &Vec<i64>) -> Vec<i64> {
+fn differentiate(values: &[i64]) -> Vec<i64> {
     values
         .iter()
         .tuple_windows()
@@ -42,7 +42,7 @@ fn differentiate(values: &Vec<i64>) -> Vec<i64> {
         .collect_vec()
 }
 
-fn is_not_zeroes(values: &Vec<i64>) -> bool {
+fn is_not_zeroes(values: &[i64]) -> bool {
     !values.iter().all(|&v| v == 0)
 }
 
@@ -54,11 +54,12 @@ fn hindcast(history: History) -> i64 {
     foldcast(history, |d, derivative| derivative.first().unwrap() - d)
 }
 
-fn foldcast(history: History, f: impl Fn(i64, Vec<i64>) -> i64) -> i64 {
-    itertools::iterate(history.values, differentiate)
-        .take_while_inclusive(is_not_zeroes)
+fn foldcast(History { values, .. }: History, f: impl Fn(i64, &[i64]) -> i64) -> i64 {
+    use dyn_iter::IntoDynIterator as _;
+    itertools::iterate(values, |values| differentiate(values.as_slice()))
+        .take_while_inclusive(|values| is_not_zeroes(values.as_slice()))
         .collect_vec()
         .into_iter()
         .rev()
-        .fold(0, f)
+        .fold(0, |d, values| f(d, values.as_slice()))
 }
