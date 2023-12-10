@@ -1,35 +1,59 @@
+use crate::util::*;
+use derive_more::From;
+use itertools::Itertools as _;
+use std::str::FromStr;
+
 #[test]
-fn test() {
-    use crate::util::test;
-    test(part1, 220101, 24000);
-    test(part2, 220101, 45000);
-    test(part1, 220100, 69206);
-    test(part2, 220100, 197400);
+fn test1() {
+    parse_and_test(part1, 220101, 24000);
 }
 
-fn part1(input: &str) -> u32 {
+#[test]
+fn test2() {
+    parse_and_test(part1, 220100, 69206);
+}
+
+#[test]
+fn test3() {
+    parse_and_test(part2, 220101, 45000);
+}
+
+#[test]
+fn test4() {
+    parse_and_test(part2, 220100, 197400);
+}
+
+fn part1(input: Chart) -> u32 {
     sum_top(input, 1)
 }
 
-fn part2(input: &str) -> u32 {
+fn part2(input: Chart) -> u32 {
     sum_top(input, 3)
 }
 
-fn sum_top(input: &str, n: usize) -> u32 {
-    let mut xs = parse(input)
+fn sum_top(input: Chart, n: usize) -> u32 {
+    input
+        .calories
         .into_iter()
         .map(|v| v.into_iter().sum::<u32>())
-        .collect::<Vec<_>>();
-    xs.sort_unstable();
-    xs.reverse();
-    xs.into_iter().take(n).sum()
+        .sorted_unstable()
+        .rev()
+        .take(n)
+        .sum()
 }
 
-fn parse(input: &str) -> Vec<Vec<u32>> {
-    use nom::character::complete::*;
-    use nom::multi::*;
-    use nom::IResult;
-    let parsed: IResult<&str, Vec<Vec<u32>>> =
-        separated_list1(many1(line_ending), separated_list1(line_ending, u32))(input);
-    parsed.expect("bad data").1
+#[derive(From)]
+struct Chart {
+    calories: Vec<Vec<u32>>,
+}
+
+impl FromStr for Chart {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use crate::util::parse_with_nom::*;
+        let calories = separated_list1(line_ending, u32);
+        let calories = separated_list1(many1(line_ending).id(), calories);
+        into(calories).anyhow(s)
+    }
 }
