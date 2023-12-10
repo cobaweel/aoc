@@ -5,7 +5,7 @@ aoc_test!(part1, 230200, 2776);
 aoc_test!(part2, 230201, 2286);
 aoc_test!(part2, 230200, 68638);
 
-fn part1(input: &str) -> u32 {
+fn part1(input: String) -> u32 {
     let limit_counter = Counter::new(12, 13, 14);
     input
         .lines()
@@ -26,7 +26,7 @@ fn part1(input: &str) -> u32 {
         .sum()
 }
 
-fn part2(input: &str) -> u32 {
+fn part2(input: String) -> u32 {
     input
         .lines()
         .map(parse)

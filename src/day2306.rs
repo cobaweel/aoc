@@ -1,9 +1,9 @@
 use crate::util::*;
 
-aoc_parse_and_test!(part1, 230601, 288);
-aoc_parse_and_test!(part1, 230600, 1710720);
-aoc_parse_and_test!(part2, 230601, 71503);
-aoc_parse_and_test!(part2, 230600, 35349468);
+aoc_test!(part1, 230601, 288);
+aoc_test!(part1, 230600, 1710720);
+aoc_test!(part2, 230601, 71503);
+aoc_test!(part2, 230600, 35349468);
 
 struct Records {
     records: Vec<Record>,

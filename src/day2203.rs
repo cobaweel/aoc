@@ -5,7 +5,7 @@ aoc_test!(part1, 220300, 7785);
 aoc_test!(part2, 220301, 70);
 aoc_test!(part2, 220300, 2633);
 
-fn part1(input: &str) -> u32 {
+fn part1(input: String) -> u32 {
     input
         .lines()
         .map(|line| line.split_at(line.len() / 2))
@@ -14,7 +14,7 @@ fn part1(input: &str) -> u32 {
         .sum()
 }
 
-fn part2(input: &str) -> u32 {
+fn part2(input: String) -> u32 {
     input
         .lines()
         .collect::<Vec<_>>()

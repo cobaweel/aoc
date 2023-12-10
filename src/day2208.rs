@@ -3,10 +3,10 @@ use crate::util::*;
 use dyn_iter::DynIter;
 use dyn_iter::IntoDynIterator as _;
 
-// aoc_test!(part1, 220801, 21);
-// aoc_test!(part1, 220800, 1719);
-// aoc_test!(part2, 220801, 0);
-// aoc_test!(part2, 220800, 0);
+// aoc_parse_and_test!(part1, 220801, 21);
+// aoc_parse_and_test!(part1, 220800, 1719);
+// aoc_parse_and_test!(part2, 220801, 0);
+// aoc_parse_and_test!(part2, 220800, 0);
 
 type Grid<T> = BTreeMap<Position, T>;
 type Position = (usize, usize);
@@ -105,6 +105,7 @@ fn checkbox(v: bool) -> &'static str {
     }
 }
 
-fn part1(input: &str) -> usize {
+fn part1(input: String) -> usize {
+    let input = input.as_str();
     Forest::parse(input).n_visible()
 }

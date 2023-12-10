@@ -1,9 +1,9 @@
 use crate::util::*;
 
-aoc_parse_and_test!(part1, 230401, 13);
-aoc_parse_and_test!(part1, 230400, 19135);
-aoc_parse_and_test!(part2, 230401, 30);
-aoc_parse_and_test!(part2, 230400, 5704953);
+aoc_test!(part1, 230401, 13);
+aoc_test!(part1, 230400, 19135);
+aoc_test!(part2, 230401, 30);
+aoc_test!(part2, 230400, 5704953);
 
 struct Cards(Vec<Card>);
 

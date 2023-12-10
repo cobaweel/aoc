@@ -5,14 +5,14 @@ aoc_test!(part1, 220200, 10994);
 aoc_test!(part2, 220201, 12);
 aoc_test!(part2, 220200, 12526);
 
-fn part1(input: &str) -> u32 {
+fn part1(input: String) -> u32 {
     let plays = input.lines().map(parse_line1);
     let scores = plays.map(|(p, q)| score1(&p, &q));
     let total: u32 = scores.sum();
     total
 }
 
-fn part2(input: &str) -> u32 {
+fn part2(input: String) -> u32 {
     let plays = input.lines().map(parse_line2);
     let scores = plays.map(|(p, q)| score2(&p, &q));
     let total: u32 = scores.sum();

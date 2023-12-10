@@ -5,11 +5,11 @@ aoc_test!(part1, 230100, 56108);
 aoc_test!(part2, 230102, 281);
 aoc_test!(part2, 230100, 55652);
 
-fn part1(input: &str) -> u32 {
+fn part1(input: String) -> u32 {
     input.lines().map(digits1).map(score).sum()
 }
 
-fn part2(input: &str) -> u32 {
+fn part2(input: String) -> u32 {
     input.lines().map(digits2).map(score).sum()
 }
 

@@ -5,12 +5,12 @@ aoc_test!(part1, 220700, 1555642);
 aoc_test!(part2, 220701, 24933642);
 aoc_test!(part2, 220700, 5974547);
 
-fn part1(input: &str) -> usize {
+fn part1(input: String) -> usize {
     let size_by_name = get_size_by_name(input);
     size_by_name.values().filter(|v| v <= &&100000).sum()
 }
 
-fn part2(input: &str) -> usize {
+fn part2(input: String) -> usize {
     let size_by_name = get_size_by_name(input);
     let disk_size = 70000000_usize;
     let used = *size_by_name.get("").unwrap_or(&0);
@@ -24,7 +24,7 @@ fn part2(input: &str) -> usize {
         .unwrap_or(0)
 }
 
-fn get_size_by_name(input: &str) -> HashMap<String, usize> {
+fn get_size_by_name(input: String) -> HashMap<String, usize> {
     let mut cwd: Vec<String> = std::iter::empty().collect();
     let mut size_by_name: HashMap<String, usize> = std::iter::empty().collect();
     let lines = input

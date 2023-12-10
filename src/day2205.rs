@@ -11,7 +11,8 @@ struct Move {
     dst: usize,
 }
 
-fn part1(input: &str) -> String {
+fn part1(input: String) -> String {
+    let input = input.as_str();
     let mut piles = parse_piles(input);
     for Move { n, src, dst } in parse_moves(input) {
         for _ in 0..n {
@@ -23,7 +24,8 @@ fn part1(input: &str) -> String {
     get_tops(piles)
 }
 
-fn part2(input: &str) -> String {
+fn part2(input: String) -> String {
+    let input = input.as_str();
     let mut piles = parse_piles(input);
     for Move { n, src, dst } in parse_moves(input) {
         let split_idx = piles[src - 1].len() - n;

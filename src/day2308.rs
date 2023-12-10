@@ -1,9 +1,9 @@
 use crate::util::*;
 
-aoc_parse_and_test!(part1, 230801, 2);
-aoc_parse_and_test!(part1, 230800, 16897);
-aoc_parse_and_test!(part2, 230802, 6);
-aoc_parse_and_test!(part2, 230800, 16563603485021);
+aoc_test!(part1, 230801, 2);
+aoc_test!(part1, 230800, 16897);
+aoc_test!(part2, 230802, 6);
+aoc_test!(part2, 230800, 16563603485021);
 
 #[derive(From)]
 struct Instructions {

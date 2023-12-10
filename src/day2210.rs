@@ -17,10 +17,10 @@ const RESULT2: &str = "\
 #....#....#....#....#....#..#.#....#....
 ####.####.#....####.####..###.####.####.";
 
-aoc_parse_and_test!(part1, 221001, 13140);
-aoc_parse_and_test!(part1, 221000, 14780);
-aoc_parse_and_test!(part2, 221001, RESULT1.to_string());
-aoc_parse_and_test!(part2, 221000, RESULT2.to_string());
+aoc_test!(part1, 221001, 13140);
+aoc_test!(part1, 221000, 14780);
+aoc_test!(part2, 221001, RESULT1.to_string());
+aoc_test!(part2, 221000, RESULT2.to_string());
 
 #[derive(Debug, From)]
 struct Program {

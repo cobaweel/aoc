@@ -1,9 +1,9 @@
 use crate::util::*;
 
-aoc_parse_and_test!(part1, 220101, 24000);
-aoc_parse_and_test!(part1, 220100, 69206);
-aoc_parse_and_test!(part2, 220101, 45000);
-aoc_parse_and_test!(part2, 220100, 197400);
+aoc_test!(part1, 220101, 24000);
+aoc_test!(part1, 220100, 69206);
+aoc_test!(part2, 220101, 45000);
+aoc_test!(part2, 220100, 197400);
 
 fn part1(input: Chart) -> u32 {
     sum_top(input, 1)

@@ -2,8 +2,8 @@ use crate::util::*;
 
 aoc_test!(part1, 220901, 13);
 aoc_test!(part1, 220900, 6212);
-// aoc_test!(part2, 220901, 1);
-// aoc_test!(part2, 220900, -1);
+// aoc_parse_and_test!(part2, 220901, 1);
+// aoc_parse_and_test!(part2, 220900, -1);
 
 struct Move(Direction, u32);
 
@@ -40,7 +40,8 @@ fn walk(x: &mut (i32, i32), dx: (i32, i32)) {
     x.1 += dx.1;
 }
 
-fn part1(input: &str) -> usize {
+fn part1(input: String) -> usize {
+    let input = input.as_str();
     let mut tail_positions = HashSet::new();
     let mut head_position = (0, 0);
     let mut tail_position = (0, 0);
@@ -75,7 +76,7 @@ fn lead(point: &mut (i32, i32), direction: &Direction) {
     walk(point, d_head);
 }
 
-fn part2(_input: &str) -> usize {
+fn part2(_input: String) -> usize {
     todo!()
 }
 

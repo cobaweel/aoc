@@ -5,15 +5,15 @@ aoc_test!(part1, 220600, 1361);
 aoc_test!(part2, 220601, 19);
 aoc_test!(part2, 220600, 3263);
 
-fn part1(input: &str) -> usize {
+fn part1(input: String) -> usize {
     find_marker_of_size(input, 4)
 }
 
-fn part2(input: &str) -> usize {
+fn part2(input: String) -> usize {
     find_marker_of_size(input, 14)
 }
 
-fn find_marker_of_size(input: &str, n: usize) -> usize {
+fn find_marker_of_size(input: String, n: usize) -> usize {
     use std::collections::HashSet;
     input
         .chars()

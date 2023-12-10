@@ -17,11 +17,11 @@ fn sorted(xs: &[impl PartialOrd]) -> bool {
     xs.windows(2).all(|w| w[0] <= w[1])
 }
 
-fn part1(input: &str) -> u32 {
+fn part1(input: String) -> u32 {
     input.lines().map(parse).filter(has_inclusion).count() as u32
 }
 
-fn part2(input: &str) -> u32 {
+fn part2(input: String) -> u32 {
     input.lines().map(parse).filter(has_overlap).count() as u32
 }
 

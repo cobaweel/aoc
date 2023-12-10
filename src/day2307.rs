@@ -1,9 +1,9 @@
 use crate::util::*;
 
-aoc_parse_and_test!(part1, 230701, 6440);
-aoc_parse_and_test!(part1, 230700, 250347426);
-aoc_parse_and_test!(part2, 230701, 5905);
-aoc_parse_and_test!(part2, 230700, 251224870);
+aoc_test!(part1, 230701, 6440);
+aoc_test!(part1, 230700, 250347426);
+aoc_test!(part2, 230701, 5905);
+aoc_test!(part2, 230700, 251224870);
 
 fn part1(mut hands: Hands) -> i64 {
     hands.winnings(Hand::key1)

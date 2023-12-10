@@ -11,38 +11,16 @@ macro_rules! aoc_test {
         concat_idents::concat_idents!(test_name = test_, $part, _, $input {
             #[test]
             fn test_name() {
-                aoc_test_running::aoc_run_test($part, $input, $val);
+                aoc_test_running::aoc_run_parse_and_test($part, $input, $val);
             }
         });
     };
 }
 pub(crate) use aoc_test;
 
-macro_rules! aoc_parse_and_test {
-    ($part:ident, $input:expr, $val:expr) => {
-        concat_idents::concat_idents!(test_name = test_, $part, _, $input {
-            #[test]
-            fn test_name() {
-                aoc_test_running::aoc_run_parse_and_test($part, $input, $val);
-            }
-        });
-    };
-}
-pub(crate) use aoc_parse_and_test;
-
 pub mod aoc_test_running {
     use std::fmt::Debug;
     use std::str::FromStr;
-
-    pub fn aoc_run_test<T>(process: impl Fn(&str) -> T, input_number: u32, expected: T)
-    where
-        T: Eq + Debug,
-    {
-        let input_path = format!("input/{input_number}.txt");
-        let input_string = std::fs::read_to_string(input_path).expect("cannot read test data");
-        let output = process(input_string.as_ref());
-        assert_eq!(output, expected);
-    }
 
     pub fn aoc_run_parse_and_test<I, T>(process: impl Fn(I) -> T, input_number: u32, expected: T)
     where
