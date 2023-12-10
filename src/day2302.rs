@@ -1,12 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    aoc_test(part1, 230201, 8);
-    aoc_test(part1, 230200, 2776);
-    aoc_test(part2, 230201, 2286);
-    aoc_test(part2, 230200, 68638);
-}
+aoc_test!(part1, 230201, 8);
+aoc_test!(part1, 230200, 2776);
+aoc_test!(part2, 230201, 2286);
+aoc_test!(part2, 230200, 68638);
 
 fn part1(input: &str) -> u32 {
     let limit_counter = Counter::new(12, 13, 14);

@@ -1,24 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    crate::util::aoc_parse_and_test(part1, 230701, 6440);
-}
-
-#[test]
-fn test2() {
-    crate::util::aoc_parse_and_test(part1, 230700, 250347426);
-}
-
-#[test]
-fn test3() {
-    crate::util::aoc_parse_and_test(part2, 230701, 5905);
-}
-
-#[test]
-fn test4() {
-    crate::util::aoc_parse_and_test(part2, 230700, 251224870);
-}
+aoc_parse_and_test!(part1, 230701, 6440);
+aoc_parse_and_test!(part1, 230700, 250347426);
+aoc_parse_and_test!(part2, 230701, 5905);
+aoc_parse_and_test!(part2, 230700, 251224870);
 
 fn part1(mut hands: Hands) -> i64 {
     hands.winnings(Hand::key1)

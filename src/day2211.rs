@@ -1,24 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    crate::util::aoc_parse_and_test(part1, 221101, 10605);
-}
-
-#[test]
-fn test2() {
-    crate::util::aoc_parse_and_test(part1, 221100, 111210);
-}
-
-#[test]
-fn test3() {
-    crate::util::aoc_parse_and_test(part2, 221101, 2713310158);
-}
-
-#[test]
-fn test4() {
-    crate::util::aoc_parse_and_test(part2, 221100, 15447387620);
-}
+aoc_parse_and_test!(part1, 221101, 10605);
+aoc_parse_and_test!(part1, 221100, 111210);
+aoc_parse_and_test!(part2, 221101, 2713310158);
+aoc_parse_and_test!(part2, 221100, 15447387620);
 
 #[derive(Debug, From)]
 struct Monkeys {

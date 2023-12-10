@@ -1,13 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    use crate::util::aoc_parse_and_test;
-    aoc_parse_and_test(part1, 230301, 4361);
-    aoc_parse_and_test(part1, 230300, 525181);
-    aoc_parse_and_test(part2, 230301, 467835);
-    aoc_parse_and_test(part2, 230300, 84289137);
-}
+aoc_parse_and_test!(part1, 230301, 4361);
+aoc_parse_and_test!(part1, 230300, 525181);
+aoc_parse_and_test!(part2, 230301, 467835);
+aoc_parse_and_test!(part2, 230300, 84289137);
 
 struct Input {
     grid: ndarray::Array2<char>,

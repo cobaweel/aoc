@@ -1,12 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    aoc_test(part1, 220901, 13);
-    aoc_test(part1, 220900, 6212);
-    // test(part2, 220901, 1);
-    // test(part2, 220900, ());
-}
+aoc_test!(part1, 220901, 13);
+aoc_test!(part1, 220900, 6212);
+// aoc_test!(part2, 220901, 1);
+// aoc_test!(part2, 220900, -1);
 
 struct Move(Direction, u32);
 

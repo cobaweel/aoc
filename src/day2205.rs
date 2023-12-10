@@ -1,12 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    aoc_test(part1, 220501, "CMZ".to_string());
-    aoc_test(part1, 220500, "PTWLTDSJV".to_string());
-    aoc_test(part2, 220501, "MCD".to_string());
-    aoc_test(part2, 220500, "WZMFVGGZP".to_string());
-}
+aoc_test!(part1, 220501, "CMZ".to_string());
+aoc_test!(part1, 220500, "PTWLTDSJV".to_string());
+aoc_test!(part2, 220501, "MCD".to_string());
+aoc_test!(part2, 220500, "WZMFVGGZP".to_string());
 
 struct Move {
     n: usize,

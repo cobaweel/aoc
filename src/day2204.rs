@@ -1,12 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    aoc_test(part1, 220401, 2);
-    aoc_test(part1, 220400, 448);
-    aoc_test(part2, 220401, 4);
-    aoc_test(part2, 220400, 794);
-}
+aoc_test!(part1, 220401, 2);
+aoc_test!(part1, 220400, 448);
+aoc_test!(part2, 220401, 4);
+aoc_test!(part2, 220400, 794);
 
 #[derive(Debug)]
 struct Assignment {

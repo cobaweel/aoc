@@ -1,39 +1,26 @@
 use crate::util::*;
 use ndarray::{Array1, Array2};
 
-#[test]
-fn test1() {
-    aoc_parse_and_test(part1, 221001, 13140);
-}
-
-#[test]
-fn test2() {
-    aoc_parse_and_test(part1, 221000, 14780);
-}
-
-#[test]
-fn test3() {
-    let screen = "\
+const RESULT1: &str = "\
 ##..##..##..##..##..##..##..##..##..##..
 ###...###...###...###...###...###...###.
 ####....####....####....####....####....
 #####.....#####.....#####.....#####.....
 ######......######......######......####
 #######.......#######.......#######.....";
-    aoc_parse_and_test(part2, 221001, screen.to_string());
-}
 
-#[test]
-fn test4() {
-    let screen = "\
+const RESULT2: &str = "\
 ####.#....###..#....####..##..####.#....
 #....#....#..#.#.......#.#..#....#.#....
 ###..#....#..#.#......#..#......#..#....
 #....#....###..#.....#...#.##..#...#....
 #....#....#....#....#....#..#.#....#....
 ####.####.#....####.####..###.####.####.";
-    aoc_parse_and_test(part2, 221000, screen.to_string());
-}
+
+aoc_parse_and_test!(part1, 221001, 13140);
+aoc_parse_and_test!(part1, 221000, 14780);
+aoc_parse_and_test!(part2, 221001, RESULT1.to_string());
+aoc_parse_and_test!(part2, 221000, RESULT2.to_string());
 
 #[derive(Debug, From)]
 struct Program {
@@ -98,11 +85,9 @@ fn draw_scan_line(line: impl Iterator<Item = i32>) -> String {
 }
 
 fn part2(program: Program) -> String {
-    let screen = run(program)
+    run(program)
         .chunks(40)
         .into_iter()
         .map(draw_scan_line)
-        .join("\n");
-    println!("{}", screen);
-    screen
+        .join("\n")
 }

@@ -3,13 +3,10 @@ use crate::util::*;
 use dyn_iter::DynIter;
 use dyn_iter::IntoDynIterator as _;
 
-#[test]
-fn test1() {
-    // test(part1, 220801, 21);
-    // test(part1, 220800, 1719);
-    // test(part2, 220801, ());
-    // test(part2, 220800, ());
-}
+// aoc_test!(part1, 220801, 21);
+// aoc_test!(part1, 220800, 1719);
+// aoc_test!(part2, 220801, 0);
+// aoc_test!(part2, 220800, 0);
 
 type Grid<T> = BTreeMap<Position, T>;
 type Position = (usize, usize);

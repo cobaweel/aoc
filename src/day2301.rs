@@ -1,12 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    aoc_test(part1, 230101, 142);
-    aoc_test(part1, 230100, 56108);
-    aoc_test(part2, 230102, 281);
-    aoc_test(part2, 230100, 55652);
-}
+aoc_test!(part1, 230101, 142);
+aoc_test!(part1, 230100, 56108);
+aoc_test!(part2, 230102, 281);
+aoc_test!(part2, 230100, 55652);
 
 fn part1(input: &str) -> u32 {
     input.lines().map(digits1).map(score).sum()

@@ -1,24 +1,9 @@
 use crate::util::*;
 
-#[test]
-fn test1() {
-    aoc_parse_and_test(part1, 230501, 35);
-}
-
-#[test]
-fn test2() {
-    aoc_parse_and_test(part1, 230500, 175622908);
-}
-
-#[test]
-fn test3() {
-    aoc_parse_and_test(part2, 230501, 46);
-}
-
-#[test]
-fn test4() {
-    aoc_parse_and_test(part2, 230500, 5200543);
-}
+aoc_parse_and_test!(part1, 230501, 35);
+aoc_parse_and_test!(part1, 230500, 175622908);
+aoc_parse_and_test!(part2, 230501, 46);
+aoc_parse_and_test!(part2, 230500, 5200543);
 
 #[derive(From, Clone, Debug)]
 struct Almanac {
