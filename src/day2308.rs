@@ -35,11 +35,8 @@ impl FromStr for Instructions {
         let turns = many1(turn);
         let node = count(terminated(alphanumeric1, many1(one_of(" =(),"))), 3).into_str_parser();
         let node = node.map(|ns| ns.into_iter().map(str::to_string));
-        let node = into(map_opt(
-            node,
-            Itertools::collect_tuple::<(String, String, String)>,
-        ));
-        let nodes = separated_list1(multispace1, node);
+        let node = map_opt(node, Itertools::collect_tuple::<(String, String, String)>);
+        let nodes = separated_list1(multispace1, into(node));
         let instructions = into(separated_pair(turns, multispace1, nodes));
         instructions.anyhow(s)
     }
