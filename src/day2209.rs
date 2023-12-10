@@ -1,7 +1,4 @@
-use anyhow::anyhow;
-use itertools::Itertools;
-use std::collections::HashSet;
-use std::{fmt::Display, ops::AddAssign, str::FromStr};
+use crate::util::*;
 
 #[test]
 fn test() {
@@ -26,8 +23,7 @@ impl FromStr for Move {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> anyhow::Result<Self> {
-        use itertools::Itertools;
-
+        use anyhow::anyhow;
         s.split_ascii_whitespace()
             .collect_tuple()
             .map(|(dir, dist)| {

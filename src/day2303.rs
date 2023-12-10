@@ -1,6 +1,4 @@
-use anyhow::Error;
-use itertools::Itertools as _;
-use std::*;
+use crate::util::*;
 
 #[test]
 fn test() {
@@ -23,17 +21,17 @@ struct Number {
     n: u32,
 }
 
-impl str::FromStr for Input {
-    type Err = Error;
+impl FromStr for Input {
+    type Err = anyhow::Error;
 
-    fn from_str(s: &str) -> Result<Input, Error> {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         let grid = parse_grid(s)?;
         let numbers = parse_numbers(s)?;
         Ok(Input { grid, numbers })
     }
 }
 
-fn parse_numbers(s: &str) -> Result<Vec<Number>, Error> {
+fn parse_numbers(s: &str) -> Result<Vec<Number>, anyhow::Error> {
     let mut out = vec![];
     let re = regex::Regex::new(r"\d+")?;
     for (x, line) in s.lines().enumerate() {
@@ -49,7 +47,7 @@ fn parse_numbers(s: &str) -> Result<Vec<Number>, Error> {
     Ok(out)
 }
 
-fn parse_grid(s: &str) -> Result<ndarray::Array2<char>, Error> {
+fn parse_grid(s: &str) -> Result<ndarray::Array2<char>, anyhow::Error> {
     // Surely there's a more elegant way to do this...
     let mut xx = 0;
     let mut yy = 0;
@@ -57,8 +55,8 @@ fn parse_grid(s: &str) -> Result<ndarray::Array2<char>, Error> {
         .lines()
         .enumerate()
         .flat_map(|(x, line)| {
-            xx = cmp::max(xx, x + 1);
-            yy = cmp::max(yy, line.len());
+            xx = std::cmp::max(xx, x + 1);
+            yy = std::cmp::max(yy, line.len());
             line.chars()
         })
         .collect_vec();

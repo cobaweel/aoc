@@ -1,8 +1,7 @@
-#![allow(dead_code)]
+use crate::util::*;
 
 #[test]
-fn test() {
-    use crate::util::test;
+fn test1() {
     test(part1, 220301, 157);
     test(part1, 220300, 7785);
     test(part2, 220301, 70);

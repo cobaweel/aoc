@@ -1,7 +1,4 @@
 use crate::util::*;
-use derive_more::From;
-use itertools::Itertools as _;
-use std::str::FromStr;
 
 #[test]
 fn test1() {

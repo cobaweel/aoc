@@ -1,11 +1,7 @@
-use std::{
-    cmp::{max, min},
-    collections::{BTreeMap, BTreeSet, HashMap},
-    fmt::Display,
-    iter,
-};
+use crate::util::*;
 
 use dyn_iter::DynIter;
+use dyn_iter::IntoDynIterator as _;
 
 #[test]
 fn test() {
@@ -15,7 +11,6 @@ fn test() {
     // test(part2, 220801, ());
     // test(part2, 220800, ());
 }
-use dyn_iter::IntoDynIterator as _;
 
 type Grid<T> = BTreeMap<Position, T>;
 type Position = (usize, usize);

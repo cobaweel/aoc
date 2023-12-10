@@ -1,7 +1,4 @@
-use derive_more::From;
-use itertools::Itertools as _;
-use nom::character::streaming::anychar;
-use std::str::FromStr;
+use crate::util::*;
 
 #[test]
 fn test1() {
@@ -118,7 +115,6 @@ fn part2(Monkeys { mut monkeys }: Monkeys) -> u64 {
         .iter()
         .map(|monkey| monkey.decision.divisor)
         .product();
-    println!("{field}");
     for _ in 0..10000 {
         for i in 0..monkeys.len() {
             let items = std::mem::take(&mut monkeys[i].items);

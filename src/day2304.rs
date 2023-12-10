@@ -1,8 +1,4 @@
-use crate::util::parse_and_test;
-use anyhow::Context as _;
-use itertools::Itertools as _;
-use std::collections::HashSet;
-use std::*;
+use crate::util::*;
 
 #[test]
 fn test1() {
@@ -26,7 +22,7 @@ fn test4() {
 
 struct Cards(Vec<Card>);
 
-impl str::FromStr for Cards {
+impl FromStr for Cards {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -40,7 +36,7 @@ struct Card {
     wins: Vec<usize>,
 }
 
-impl str::FromStr for Card {
+impl FromStr for Card {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {

@@ -1,5 +1,4 @@
-use itertools::Itertools;
-use std::{collections::HashMap, iter};
+use crate::util::*;
 
 #[test]
 fn test() {
@@ -30,8 +29,8 @@ fn part2(input: &str) -> usize {
 }
 
 fn get_size_by_name(input: &str) -> HashMap<String, usize> {
-    let mut cwd: Vec<String> = iter::empty().collect();
-    let mut size_by_name: HashMap<String, usize> = iter::empty().collect();
+    let mut cwd: Vec<String> = std::iter::empty().collect();
+    let mut size_by_name: HashMap<String, usize> = std::iter::empty().collect();
     let lines = input
         .lines()
         .map(|line| line.split_ascii_whitespace().collect_vec());

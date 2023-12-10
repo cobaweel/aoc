@@ -1,7 +1,4 @@
-use crate::util::parse_and_test;
-use derive_more::From;
-use itertools::{izip, Itertools};
-use std::{array::IntoIter, str::FromStr};
+use crate::util::*;
 
 #[test]
 fn test1() {
@@ -46,7 +43,7 @@ impl FromStr for Records {
         let numbers = || preceded(prefix(), separated_list1(space1, i64));
         let records = || {
             separated_pair(numbers(), multispace1, numbers()).map(|(times, distances)| {
-                let records = izip!(times, distances)
+                let records = itertools::izip!(times, distances)
                     .map(|(time, distance)| Record { time, distance })
                     .collect_vec();
                 Records { records }
