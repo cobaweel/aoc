@@ -198,7 +198,7 @@ impl Maze {
         }
     }
 
-    fn walk(&self, pos: Pos) -> Vec<(Direction, Pos)> {
+    fn walk_from(&self, prev: Pos, pos: Pos) -> (Direction, Pos) {
         let dim = self.dim();
         self.at(pos)
             .into_iter()
@@ -207,24 +207,14 @@ impl Maze {
                     .into_iter()
                     .map(|direction| (direction, pos.walk(direction)))
             })
-            .filter(|(_direction, pos)| dim.contains(*pos))
-            .collect()
-    }
-
-    fn walk_from(&self, prev: Pos, pos: Pos) -> (Direction, Pos) {
-        let (pos,) = self
-            .walk(pos)
-            .into_iter()
-            .filter(|&(_direction, pos)| pos != prev)
-            .collect_tuple()
-            .expect("bad maze");
-        pos
+            .find(|&(_direction, pos)| dim.contains(pos) && pos != prev)
+            .expect("bad maze")
     }
 
     fn path(&mut self) -> (Vec<Pos>, Vec<Direction>) {
         let fst = self.find_animal();
         let prv = fst;
-        let (direction, cur) = self.walk(prv)[0];
+        let (direction, cur) = self.walk_from(prv, prv);
         let (positions, directions): (Vec<Pos>, Vec<Direction>) =
             itertools::iterate((prv, direction, cur), |&(prv, _direction, cur)| {
                 let (direction, nxt) = self.walk_from(prv, cur);
@@ -244,6 +234,8 @@ fn part1(mut maze: Maze) -> usize {
 
 fn part2(mut maze: Maze) -> usize {
     let (positions, _) = maze.path();
+
+    // Clear out all the plumbing that doesn't belong to the cycle
     let boundary = positions
         .into_iter()
         .map(|pos| pos.into_index())
@@ -257,18 +249,18 @@ fn part2(mut maze: Maze) -> usize {
     }
 
     use Tile::*;
-    let mut c = 0;
-    let mut dc = 0;
-    let mut down = No;
+    let mut c = 0; // Number of interior tiles encountered so far
+    let mut interior = false; // Are we currently inside the loop?
+    let mut latest_ne = false; // Have we seen NE more recently than SE?
     for row in maze.tiles {
         for tile in row {
-            match (down, tile) {
-                (_, No) => c += dc,
-                (_, NS) => dc = 1 - dc,
-                (_, NE) => down = NE,
-                (_, SE) => down = SE,
-                (NE, SW) => dc = 1 - dc,
-                (SE, NW) => dc = 1 - dc,
+            match (tile, interior, latest_ne) {
+                (No, true, _) => c += 1,
+                (NE, _, _) => latest_ne = true,
+                (SE, _, _) => latest_ne = false,
+                (NS, _, _) => interior = !interior,
+                (SW, _, true) => interior = !interior,
+                (NW, _, false) => interior = !interior,
                 _ => {}
             }
         }
