@@ -17,7 +17,7 @@ pub use std::str::FromStr;
 /// ```
 macro_rules! aoc_test {
         ($part:ident, $input:expr, $val:expr) => {
-            concat_idents::concat_idents!(test_name = test_, $part, _, $input {
+            concat_idents::concat_idents!(test_name = test_, $input, _, $part {
                 #[test]
                 fn test_name() {
                     aoc_run_test($part, $input, $val);
@@ -90,4 +90,31 @@ pub mod aoc_nom {
     }
 
     impl<'a, O, T> StrParser<'a, O> for T where T: Parser<&'a str, O, Error<&'a str>> {}
+}
+
+pub mod aoc {
+    use itertools::Itertools;
+
+    /// Maybe this is tucked away somewhere inside of `ndarray` already, but for
+    /// the life of me, I can't find it. This transforms an iterator of
+    /// iterators of `T` to an `Array2<T>`, which is especially helpful when
+    /// parsing 2D grids from textual representations.
+    pub fn array2<TTT, TT, T: std::fmt::Debug>(ttt: TTT) -> anyhow::Result<ndarray::Array2<T>>
+    where
+        TTT: Iterator<Item = TT>,
+        TT: Iterator<Item = T>,
+    {
+        let mut shape = None;
+        let array: ndarray::Array1<T> = ttt
+            .enumerate()
+            .flat_map(|(row, line)| line.enumerate().map(move |(col, t)| ((row, col), t)))
+            .map(|((row, col), t)| {
+                let _ = shape.insert((row + 1, col + 1));
+                t
+            })
+            .collect();
+        let shape = shape.unwrap_or((0, 0));
+        let array = array.into_shape(shape)?;
+        Ok(array)
+    }
 }
