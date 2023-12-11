@@ -12,7 +12,7 @@ aoc_test!(part2, 231003, 4);
 aoc_test!(part2, 231004, 8);
 aoc_test!(part2, 231005, 10);
 
-// aoc_test!(part2, 231000, 0);
+aoc_test!(part2, 231000, 525);
 
 #[derive(Debug, From, Clone)]
 struct Maze {
@@ -148,18 +148,20 @@ impl Maze {
         Pos(self.tiles.len() as isize, self.tiles[0].len() as isize)
     }
 
-    fn find_animal(&self) -> Option<Pos> {
-        let mut out = None;
+    fn find_animal(&mut self) -> Pos {
+        let mut pos = None;
         let dim = self.dim();
         for x in 0..dim.0 {
             for y in 0..dim.1 {
                 let pos_ = Pos(x, y);
                 if self.at(pos_) == Some(Tile::Start) {
-                    let _ = out.insert(pos_);
+                    let _ = pos.insert(pos_);
                 }
             }
         }
-        out
+        let pos = pos.expect("no animal");
+        self.reveal_hidden_tile(pos);
+        pos
     }
 
     fn reveal_hidden_tile(&mut self, pos: Pos) {
@@ -220,8 +222,7 @@ impl Maze {
     }
 
     fn path(&mut self) -> (Vec<Pos>, Vec<Direction>) {
-        let fst = self.find_animal().expect("no animal");
-        self.reveal_hidden_tile(fst);
+        let fst = self.find_animal();
         let prv = fst;
         let (direction, cur) = self.walk(prv)[0];
         let (positions, directions): (Vec<Pos>, Vec<Direction>) =
@@ -236,45 +237,41 @@ impl Maze {
     }
 }
 
-fn part1(mut maze: Maze) -> u32 {
+fn part1(mut maze: Maze) -> usize {
     let (positions, _directions) = maze.path();
-    (positions.len() / 2) as u32
+    positions.len() / 2
 }
 
-fn part2(mut maze: Maze) -> u32 {
-    let dim = maze.dim();
-    let (positions, directions) = maze.path();
-
-    let boundary: HashSet<Pos> = positions.iter().cloned().collect();
-    let mut interior: HashSet<Pos> = positions
-        .iter()
-        .zip(directions.clone())
-        .filter_map(|(boundary_pos, direction)| {
-            let interior_pos = boundary_pos.walk(direction.next());
-            let is_interior = dim.contains(interior_pos) && !boundary.contains(&interior_pos);
-            is_interior.then_some(interior_pos)
-        })
-        .collect();
-
-    let mut work: Vec<Pos> = interior.iter().cloned().collect();
-    while let Some(pos) = work.pop() {
-        for direction in [Direction::N, Direction::E, Direction::S, Direction::W] {
-            let pos = pos.walk(direction);
-            if dim.contains(pos) && !boundary.contains(&pos) && !interior.contains(&pos) {
-                work.push(pos);
-                interior.insert(pos);
+fn part2(mut maze: Maze) -> usize {
+    let (positions, _) = maze.path();
+    let boundary = positions
+        .into_iter()
+        .map(|pos| pos.into_index())
+        .collect::<HashSet<_>>();
+    for (row, line) in maze.tiles.iter_mut().enumerate() {
+        for (col, tile) in line.iter_mut().enumerate() {
+            if !boundary.contains(&(row, col)) {
+                *tile = Tile::No;
             }
         }
     }
 
-    let n_empty = maze
-        .tiles
-        .iter()
-        .flat_map(|row| row.iter())
-        .filter(|&&tile| tile == Tile::No)
-        .count();
-    let n_found = interior.len();
-    let wrong = interior.iter().any(|&pos| dim.contains_in_edge(pos));
-    let n_interior = if wrong { n_empty - n_found } else { n_found };
-    n_interior as u32
+    use Tile::*;
+    let mut c = 0;
+    let mut dc = 0;
+    let mut down = No;
+    for row in maze.tiles {
+        for tile in row {
+            match (down, tile) {
+                (_, No) => c += dc,
+                (_, NS) => dc = 1 - dc,
+                (_, NE) => down = NE,
+                (_, SE) => down = SE,
+                (NE, SW) => dc = 1 - dc,
+                (SE, NW) => dc = 1 - dc,
+                _ => {}
+            }
+        }
+    }
+    c
 }
