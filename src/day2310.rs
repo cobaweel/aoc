@@ -46,7 +46,7 @@ impl Tile {
     }
 }
 
-#[derive(PartialEq, Eq, Copy, Clone, Debug)]
+#[derive(PartialEq, Eq, Copy, Clone, Debug, EnumIter)]
 enum Direction {
     N,
     E,
@@ -139,10 +139,9 @@ impl Maze {
         use Direction::*;
         use Tile::*;
         let dim = self.dim();
-        let connections = [N, E, S, W]
-            .iter()
+        let connections = Direction::iter()
             .map(|direction| {
-                pos.walk(*direction, dim)
+                pos.walk(direction, dim)
                     .map(|pos| {
                         self.at(pos)
                             .map(|tile| tile.directions().contains(&direction.opposite()))

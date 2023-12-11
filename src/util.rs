@@ -5,6 +5,8 @@ pub use std::cmp::{max, min};
 pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 pub use std::fmt::{Debug, Display};
 pub use std::str::FromStr;
+pub use strum::EnumIter;
+pub use strum::IntoEnumIterator as _;
 
 /// Create a sensibly named test case that invokes `aoc_run_test`. For instance,
 /// `aoc_test!(part1, 230101, 10)` would expand to:
