@@ -63,61 +63,31 @@ impl Direction {
             Direction::W => Direction::E,
         }
     }
-
-    fn next(self) -> Self {
-        use Direction::*;
-        match self {
-            N => E,
-            E => S,
-            S => W,
-            W => N,
-        }
-    }
-
-    fn angle(self) -> isize {
-        match self {
-            Direction::N => 0,
-            Direction::E => 1,
-            Direction::S => 2,
-            Direction::W => 3,
-        }
-    }
-
-    fn rotation(self, prv: Direction) -> isize {
-        use Direction::*;
-        let mut rotation = self.angle() - prv.angle();
-        if rotation == 3 {
-            rotation = -1;
-        }
-        rotation
-    }
 }
 
 #[derive(Debug, Default, PartialEq, Eq, Clone, Copy, Hash)]
-struct Pos(isize, isize);
+struct Pos(usize, usize);
 
 struct Dim(Range<usize>, Range<usize>);
 
 impl Pos {
-    fn into_index(self) -> (usize, usize) {
-        (self.0 as usize, self.1 as usize)
-    }
-
     fn contains(self, other: Self) -> bool {
         (0..self.0).contains(&other.0) && (0..self.1).contains(&other.1)
     }
 
-    fn contains_in_edge(self, other: Self) -> bool {
-        other.0 == 0 || other.1 == 0 || other.0 == self.0 || other.1 == self.1
-    }
-
-    fn walk(self, direction: Direction) -> Self {
+    fn walk(self, direction: Direction, dim: Pos) -> Option<Self> {
         let Pos(row, col) = self;
-        match direction {
-            Direction::N => Pos(row - 1, col),
-            Direction::E => Pos(row, col + 1),
-            Direction::S => Pos(row + 1, col),
-            Direction::W => Pos(row, col - 1),
+        let (row, col) = match direction {
+            Direction::N => (row.checked_sub(1), Some(col)),
+            Direction::E => (Some(row), col.checked_add(1)),
+            Direction::S => (row.checked_add(1), Some(col)),
+            Direction::W => (Some(row), col.checked_sub(1)),
+        };
+        if let (Some(row), Some(col)) = (row, col) {
+            let pos = Pos(row, col);
+            dim.contains(pos).then_some(pos)
+        } else {
+            None
         }
     }
 }
@@ -145,21 +115,22 @@ impl FromStr for Maze {
 
 impl Maze {
     fn dim(&self) -> Pos {
-        Pos(self.tiles.len() as isize, self.tiles[0].len() as isize)
+        Pos(self.tiles.len(), self.tiles[0].len())
     }
 
     fn find_animal(&mut self) -> Pos {
-        let mut pos = None;
-        let dim = self.dim();
-        for x in 0..dim.0 {
-            for y in 0..dim.1 {
-                let pos_ = Pos(x, y);
-                if self.at(pos_) == Some(Tile::Start) {
-                    let _ = pos.insert(pos_);
-                }
-            }
-        }
-        let pos = pos.expect("no animal");
+        let pos = self
+            .tiles
+            .iter()
+            .enumerate()
+            .flat_map(|(row, line)| {
+                line.iter()
+                    .enumerate()
+                    .map(move |(col, tile)| (Pos(row, col), tile))
+            })
+            .find(|(_pos, &tile)| tile == Tile::Start)
+            .expect("no animal")
+            .0;
         self.reveal_hidden_tile(pos);
         pos
     }
@@ -167,16 +138,20 @@ impl Maze {
     fn reveal_hidden_tile(&mut self, pos: Pos) {
         use Direction::*;
         use Tile::*;
+        let dim = self.dim();
         let connections = [N, E, S, W]
             .iter()
             .map(|direction| {
-                self.at(pos.walk(*direction))
-                    .map(|tile| tile.directions().contains(&direction.opposite()))
+                pos.walk(*direction, dim)
+                    .map(|pos| {
+                        self.at(pos)
+                            .map(|tile| tile.directions().contains(&direction.opposite()))
+                            .unwrap_or(false)
+                    })
                     .unwrap_or(false)
             })
             .collect_vec();
-        let (row, col) = pos.into_index();
-        self.tiles[row][col] = match connections.as_slice() {
+        self.tiles[pos.0][pos.1] = match connections.as_slice() {
             // N     E     S      W
             [true, true, false, false] => NE,
             [true, false, true, false] => NS,
@@ -191,8 +166,7 @@ impl Maze {
     fn at(&self, pos: Pos) -> Option<Tile> {
         let dim = self.dim();
         if dim.contains(pos) {
-            let (row, col) = pos.into_index();
-            Some(self.tiles[row][col])
+            Some(self.tiles[pos.0][pos.1])
         } else {
             None
         }
@@ -205,7 +179,7 @@ impl Maze {
             .flat_map(|tile| {
                 tile.directions()
                     .into_iter()
-                    .map(|direction| (direction, pos.walk(direction)))
+                    .filter_map(|direction| pos.walk(direction, dim).map(|pos| (direction, pos)))
             })
             .find(|&(_direction, pos)| dim.contains(pos) && pos != prev)
             .expect("bad maze")
@@ -236,13 +210,10 @@ fn part2(mut maze: Maze) -> usize {
     let (positions, _) = maze.path();
 
     // Clear out all the plumbing that doesn't belong to the cycle
-    let boundary = positions
-        .into_iter()
-        .map(|pos| pos.into_index())
-        .collect::<HashSet<_>>();
+    let boundary = positions.into_iter().collect::<HashSet<_>>();
     for (row, line) in maze.tiles.iter_mut().enumerate() {
         for (col, tile) in line.iter_mut().enumerate() {
-            if !boundary.contains(&(row, col)) {
+            if !boundary.contains(&Pos(row, col)) {
                 *tile = Tile::No;
             }
         }
