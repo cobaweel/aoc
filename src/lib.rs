@@ -3,6 +3,10 @@
 
 mod util;
 
+mod day1501;
+mod day1502;
+mod day1503;
+
 mod day2201;
 mod day2202;
 mod day2203;

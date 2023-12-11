@@ -66,7 +66,7 @@ impl Map {
     /// To find the view from a given tree in a given direction, keep walking until we hit a tree
     /// that is at least as tall as the first, or the edge
     fn view(&self, pos: Pos, height: Height, dir: Dir) -> impl Iterator<Item = Pos> + '_ {
-        self.path(dir, height, pos)
+        self.path(pos, height, dir)
             .skip(1)
             .take_while_inclusive(move |&(_, h)| h < height)
             .map(|(pos, _)| pos)
@@ -74,7 +74,7 @@ impl Map {
 
     /// From a given starting position, the path in some direction is the sequence of heights of
     /// the trees you pass moving in that direction
-    fn path(&self, dir: Dir, height: Height, pos: Pos) -> impl Iterator<Item = (Pos, Height)> + '_ {
+    fn path(&self, pos: Pos, height: Height, dir: Dir) -> impl Iterator<Item = (Pos, Height)> + '_ {
         let first = std::iter::once((pos, height));
         let rest = std::iter::repeat(()).scan(pos, move |cur, _| {
             if let Some(nxt) = Self::next(dir, *cur) {
@@ -105,7 +105,7 @@ impl Map {
     /// end, reporting every tree that is taller than the tallest seen before it
     fn edge_view(&self, fst: Pos, dir: Dir) -> impl Iterator<Item = Pos> + '_ {
         let height = self.heights[fst];
-        let view = self.path(dir, height, fst);
+        let view = self.path(fst, height, dir);
         view.scan(-1, |tallest, (pos, h)| {
             if h > *tallest {
                 *tallest = h;
@@ -117,6 +117,8 @@ impl Map {
         .flatten()
     }
 
+    /// To count the number of trees that are visible from some edge, we gather up all the
+    /// `edge_view`s and count the number of distinct trees they contain
     fn n_visible_from_edge(&self) -> usize {
         let (rows, cols) = self.heights.dim();
         itertools::chain!(
