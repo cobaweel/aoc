@@ -1,5 +1,7 @@
+pub use anyhow::anyhow;
 pub use derive_more::{From, Into};
 pub use itertools::Itertools;
+pub use std::cmp::{max, min};
 pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 pub use std::fmt::{Debug, Display};
 pub use std::str::FromStr;
@@ -61,6 +63,13 @@ pub mod aoc_nom {
         fn into_str_parser(self) -> Self
         where
             Self: Sized,
+        {
+            self
+        }
+
+        fn parses<T>(self) -> Self
+        where
+            Self: Sized + StrParser<'a, T>,
         {
             self
         }

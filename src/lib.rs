@@ -14,6 +14,7 @@ mod day2208;
 mod day2209;
 mod day2210;
 mod day2211;
+mod day2212;
 
 mod day2301;
 mod day2302;
