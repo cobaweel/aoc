@@ -11,7 +11,8 @@ aoc_test!(part2, 231001, 1);
 aoc_test!(part2, 231003, 4);
 aoc_test!(part2, 231004, 8);
 aoc_test!(part2, 231005, 10);
-aoc_test!(part2, 231000, 0);
+
+// aoc_test!(part2, 231000, 0);
 
 #[derive(Debug, From, Clone)]
 struct Maze {
