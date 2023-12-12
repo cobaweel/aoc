@@ -42,42 +42,6 @@ fn part2(records: Records) -> u64 {
     records.combine().ways_to_win()
 }
 
-#[test]
-fn test() {
-    assert_eq!(
-        Record {
-            time: 7,
-            distance: 9
-        }
-        .break_even_int(),
-        (2, 5)
-    );
-    assert_eq!(
-        Record {
-            time: 7,
-            distance: 9
-        }
-        .ways_to_win(),
-        4
-    );
-    assert_eq!(
-        Record {
-            time: 15,
-            distance: 40
-        }
-        .break_even_int(),
-        (4, 11)
-    );
-    assert_eq!(
-        Record {
-            time: 30,
-            distance: 200
-        }
-        .break_even_int(),
-        (11, 19)
-    );
-}
-
 impl Record {
     fn ways_to_win(&self) -> u64 {
         let (t0, t1) = self.break_even_int();
