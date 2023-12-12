@@ -60,8 +60,8 @@ impl Line {
     }
 
     fn nice_2a(&self) -> bool {
-        let pair = self.0.chars().tuple_windows().map(|(a, b)| (a, b));
-        let positions_by_pair = pair.zip(0..).into_grouping_map();
+        let pairs = self.0.chars().tuple_windows();
+        let positions_by_pair = pairs.zip(0..).into_grouping_map::<(char, char), usize>();
         let mut position_sets = positions_by_pair.collect::<BTreeSet<usize>>().into_values();
         position_sets.any(|ps| {
             let first = ps.first().unwrap_or(&0);
