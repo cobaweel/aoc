@@ -8,6 +8,7 @@ mod day1502;
 mod day1503;
 mod day1504;
 mod day1505;
+mod day1506;
 
 mod day2201;
 mod day2202;
