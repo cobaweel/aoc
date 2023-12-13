@@ -1,40 +1,47 @@
-use crate::util::*;
+use nom::AsBytes;
 
-// These tests are commented out because AdventCoin mining makes my
-// computer into a space heater, and takes too long.
+use crate::util::*;
 
 aoc_test!(part1, 150400, 346386);
 aoc_test!(part2, 150400, 9958218);
 
 fn part1(input: String) -> usize {
-    // mine_advent_coint("00000", input.as_str())
-    Mine::new("00000".to_string(), input).mine()
+    Mine::new(5, input.into_bytes()).mine()
 }
 
 fn part2(input: String) -> usize {
-    Mine::new("000000".to_string(), input).mine()
+    Mine::new(6, input.into_bytes()).mine()
 }
 
 struct Mine {
-    prefix: String,
-    input: String,
+    prefix: usize,
+    context: md5::Context,
 }
 
 impl Mine {
-    fn new(prefix: String, input: String) -> Self {
-        Self { prefix, input }
+    fn new(prefix: usize, input: Vec<u8>) -> Self {
+        let mut context = md5::Context::new();
+        context.consume(input.as_bytes());
+        Self { prefix, context }
     }
 
     fn blast(&self, i: usize) -> bool {
-        let hashed = format!("{}{}", self.input, i);
-        let hash = format!("{:x}", md5::compute(hashed));
-        hash.starts_with(self.prefix.as_str())
+        let mut context = self.context.clone();
+        context.consume(i.to_string().as_bytes());
+        let md5::Digest(hash) = context.compute();
+        for nybble in 0..self.prefix {
+            match (nybble % 2, hash[nybble / 2] & 0xf0, hash[nybble / 2] & 0x0f) {
+                (0, 0, _) | (1, _, 0) => {}
+                _ => return false,
+            }
+        }
+        true
     }
 
     fn mine(&self) -> usize {
         use rayon::iter::IntoParallelIterator as _;
         use rayon::prelude::*;
-        let block_size = 10000;
+        let block_size = 1000000;
         (0..)
             .flat_map(|block_idx| {
                 let block = block_idx * block_size..(block_idx + 1) * block_size;
