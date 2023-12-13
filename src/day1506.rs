@@ -8,17 +8,17 @@ aoc_test!(part2, 150600, 15343601);
 #[derive(Debug, From)]
 struct Instructions(Vec<Instruction>);
 
-#[derive(Debug, From)]
+#[derive(Debug, From, Clone, Copy)]
 struct Instruction(Operation, Light, Light);
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum Operation {
     Toggle,
     On,
     Off,
 }
 
-#[derive(Debug, From)]
+#[derive(Debug, From, Clone, Copy)]
 struct Light(usize, usize);
 
 impl FromStr for Instructions {
