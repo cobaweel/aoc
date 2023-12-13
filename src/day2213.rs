@@ -19,26 +19,6 @@ enum Packet {
     List(Vec<Packet>),
 }
 
-impl FromStr for Signal {
-    type Err = anyhow::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use aoc_nom::*;
-
-        fn packet(s: &str) -> IResult<&str, Packet> {
-            alt((
-                u32.map(Packet::Number),
-                delimited(tag("["), separated_list0(tag(","), packet), tag("]")).map(Packet::List),
-            ))
-            .parse(s)
-        }
-
-        let packet_pair = separated_pair(packet, multispace1, packet).map(PacketPair::from);
-        let signal = separated_list1(multispace1, packet_pair).map(Signal);
-        signal.anyhow(s)
-    }
-}
-
 fn part1(signal: Signal) -> usize {
     signal.score()
 }
@@ -87,5 +67,25 @@ impl Packet {
             }
         }
         cmp_1(self, other)
+    }
+}
+
+impl FromStr for Signal {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use aoc_nom::*;
+
+        fn packet(s: &str) -> IResult<&str, Packet> {
+            alt((
+                u32.map(Packet::Number),
+                delimited(tag("["), separated_list0(tag(","), packet), tag("]")).map(Packet::List),
+            ))
+            .parse(s)
+        }
+
+        let packet_pair = separated_pair(packet, multispace1, packet).map(PacketPair::from);
+        let signal = separated_list1(multispace1, packet_pair).map(Signal);
+        signal.anyhow(s)
     }
 }
