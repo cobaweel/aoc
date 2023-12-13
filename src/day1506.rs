@@ -62,13 +62,16 @@ fn part1(instructions: Instructions) -> usize {
 fn part2(instructions: Instructions) -> i64 {
     let mut brightnesses = Array2::from_elem((1000, 1000), 0);
     for Instruction(operation, Light(x_lo, y_lo), Light(x_hi, y_hi)) in instructions.0 {
-        for brightness in brightnesses.slice_mut(s![x_lo..=x_hi, y_lo..=y_hi]).iter_mut() {
+        for brightness in brightnesses
+            .slice_mut(s![x_lo..=x_hi, y_lo..=y_hi])
+            .iter_mut()
+        {
             let db = match &operation {
                 Operation::Toggle => 2,
                 Operation::On => 1,
                 Operation::Off => -1,
             };
-            *brightness = max(0,*brightness + db);
+            *brightness = max(0, *brightness + db);
         }
     }
     brightnesses.into_iter().sum()
