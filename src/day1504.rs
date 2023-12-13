@@ -1,5 +1,3 @@
-use nom::AsBytes;
-
 use crate::util::*;
 
 aoc_test!(part1, 150400, 346386);
@@ -21,7 +19,7 @@ struct Mine {
 impl Mine {
     fn new(prefix: usize, input: Vec<u8>) -> Self {
         let mut context = md5::Context::new();
-        context.consume(input.as_bytes());
+        context.consume(input.as_slice());
         Self { prefix, context }
     }
 
