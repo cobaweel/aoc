@@ -41,10 +41,18 @@ where
     I::Err: Debug,
     T: Eq + Debug,
 {
-    let input_path = format!("input/{input_number}.txt");
-    let input_string = std::fs::read_to_string(input_path).expect("cannot read test data");
-    let input = input_string.parse().expect("cannot parse test data");
+    let input = parse_test_file(input_number);
     assert_eq!(process(input), expected);
+}
+
+pub fn parse_test_file<I>(input_number: u32) -> I
+where
+    I: FromStr,
+    I::Err: Debug,
+{
+    let input_path = format!("input/{}.txt", input_number);
+    let input_string = std::fs::read_to_string(input_path).expect("cannot read test data");
+    input_string.parse().expect("cannot parse test data")
 }
 
 /// This module has everything needed for parsing AOC input files with the nom
