@@ -39,10 +39,10 @@ impl Mine {
     fn mine(&self) -> usize {
         use rayon::iter::IntoParallelIterator as _;
         use rayon::prelude::*;
-        let block_size = 1000000;
+        const BLOCK_SIZE: usize = 1000000;
         (0..)
             .flat_map(|block_idx| {
-                let block = block_idx * block_size..(block_idx + 1) * block_size;
+                let block = block_idx * BLOCK_SIZE..(block_idx + 1) * BLOCK_SIZE;
                 block.into_par_iter().find_first(|i| self.blast(*i))
             })
             .next()
