@@ -18,7 +18,7 @@ aoc_test!(part2, 231401, 64);
 aoc_test!(part2, 231400, 104409);
 
 fn part1(mut platform: Platform) -> usize {
-    platform.roll_n();
+    platform.roll();
     platform.total_load()
 }
 
@@ -29,6 +29,7 @@ fn part2(mut platform: Platform) -> usize {
     while i < n {
         platform.cycle();
         if let Some(j) = i_by_platform.insert(platform.clone(), i) {
+            // We have detected a cycle, and may as well fast forward.
             i = n - (n - i) % (i - j) + 1;
         } else {
             i += 1;
@@ -37,44 +38,50 @@ fn part2(mut platform: Platform) -> usize {
     platform.total_load()
 }
 
-type Pos = (usize, usize);
-type Mov = (isize, isize);
+enum Dir {
+    N,
+    W,
+    S,
+    E,
+}
 
 impl Platform {
+    /// Compute the total load on the north support beam
     fn total_load(&self) -> usize {
-        let array = self.0.slice(s![..;-1, ..]);
-        array
+        let upside_down = &self.0.slice(s![..;-1, ..]);
+        upside_down
             .indexed_iter()
-            .map(|((row, _), tile)| {
-                if matches!(tile, Tile::Round) {
-                    row + 1
-                } else {
-                    0
-                }
-            })
+            .filter(|(_, tile)| matches!(tile, Tile::Round))
+            .map(|((row, _), _)| row + 1)
             .sum()
     }
 
-    fn walk((r, c): (usize, usize), (dr, dc): (isize, isize)) -> Option<(usize, usize)> {
-        if let (Some(r), Some(c)) = (r.checked_add_signed(dr), c.checked_add_signed(dc)) {
-            Some((r, c))
-        } else {
-            None
+    /// View the array of tiles from a given direction
+    fn view(&mut self, dir: Dir) -> ArrayViewMut2<Tile> {
+        match dir {
+            Dir::N => self.0.slice_mut(s![.., ..]),
+            Dir::W => self.0.slice_mut(s![.., ..]).reversed_axes(),
+            Dir::S => self.0.slice_mut(s![..;-1, ..]),
+            Dir::E => self.0.slice_mut(s![.., ..;-1]).reversed_axes(),
         }
     }
 
+    /// Tilt the platform in all 4 directions, starting from N, widdershins
     fn cycle(&mut self) {
-        Self::roll(self.0.view_mut());
-        Self::roll(self.0.view_mut().reversed_axes());
-        Self::roll(self.0.slice_mut(s![..;-1, ..]));
-        Self::roll(self.0.slice_mut(s![.., ..;-1]).reversed_axes());
+        self.tilt(Dir::N);
+        self.tilt(Dir::W);
+        self.tilt(Dir::S);
+        self.tilt(Dir::E);
     }
 
-    fn roll_n(&mut self) {
-        Self::roll(self.0.view_mut());
+    /// Tilt the platform north
+    fn roll(&mut self) {
+        self.tilt(Dir::N);
     }
 
-    fn roll(mut array: ArrayViewMut2<Tile>) {
+    /// Tilt the platform in the given direction
+    fn tilt(&mut self, dir: Dir) {
+        let mut array = self.view(dir);
         use Tile::*;
         for mut column in array.columns_mut() {
             for i in 1..column.len() {
