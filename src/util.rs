@@ -111,13 +111,18 @@ pub mod aoc {
     /// parsing 2D grids from textual representations.
     pub fn array2<TTT, TT, T: std::fmt::Debug>(ttt: TTT) -> anyhow::Result<ndarray::Array2<T>>
     where
-        TTT: Iterator<Item = TT>,
-        TT: Iterator<Item = T>,
+        TTT: IntoIterator<Item = TT>,
+        TT: IntoIterator<Item = T>,
     {
         let mut shape = None;
         let array: ndarray::Array1<T> = ttt
+            .into_iter()
             .enumerate()
-            .flat_map(|(row, line)| line.enumerate().map(move |(col, t)| ((row, col), t)))
+            .flat_map(|(row, line)| {
+                line.into_iter()
+                    .enumerate()
+                    .map(move |(col, t)| ((row, col), t))
+            })
             .map(|((row, col), t)| {
                 let _ = shape.insert((row + 1, col + 1));
                 t
