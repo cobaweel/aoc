@@ -1,4 +1,4 @@
-use ndarray::{s, Array2};
+use ndarray::{s, Array2, ArrayViewMut2};
 
 use crate::util::*;
 
@@ -44,35 +44,45 @@ impl FromStr for Instructions {
     }
 }
 
-fn part1(instructions: Instructions) -> usize {
-    let mut bulbs = Array2::from_elem((1000, 1000), false);
-    for Instruction(operation, Light(x_lo, y_lo), Light(x_hi, y_hi)) in instructions.0 {
-        for bulb in bulbs.slice_mut(s![x_lo..=x_hi, y_lo..=y_hi]).iter_mut() {
-            *bulb = match (&operation, *bulb) {
-                (Operation::Toggle, true) => false,
-                (Operation::Toggle, false) => true,
-                (Operation::On, _) => true,
-                (Operation::Off, _) => false,
-            };
+impl Instructions {
+    fn execute<T>(&self, array: &mut Array2<T>, f: impl Fn(Operation, &mut T)) {
+        for instruction in self.0.iter() {
+            instruction.execute(array, &f);
         }
     }
+}
+
+impl Instruction {
+    fn execute<T>(&self, array: &mut Array2<T>, f: impl Fn(Operation, &mut T)) {
+        let &Instruction(operation, Light(x_lo, y_lo), Light(x_hi, y_hi)) = self;
+        for t in array.slice_mut(s![x_lo..=x_hi, y_lo..=y_hi]).iter_mut() {
+            f(operation, t);
+        }
+    }
+}
+
+fn part1(instructions: Instructions) -> usize {
+    let mut bulbs = Array2::from_elem((1000, 1000), false);
+    instructions.execute(&mut bulbs, |operation, bulb| {
+        *bulb = match (&operation, *bulb) {
+            (Operation::Toggle, true) => false,
+            (Operation::Toggle, false) => true,
+            (Operation::On, _) => true,
+            (Operation::Off, _) => false,
+        };
+    });
     bulbs.into_iter().filter(|&b| b).count()
 }
 
-fn part2(instructions: Instructions) -> i64 {
-    let mut brightnesses = Array2::from_elem((1000, 1000), 0);
-    for Instruction(operation, Light(x_lo, y_lo), Light(x_hi, y_hi)) in instructions.0 {
-        for brightness in brightnesses
-            .slice_mut(s![x_lo..=x_hi, y_lo..=y_hi])
-            .iter_mut()
-        {
-            let db = match &operation {
-                Operation::Toggle => 2,
-                Operation::On => 1,
-                Operation::Off => -1,
-            };
-            *brightness = max(0, *brightness + db);
-        }
-    }
-    brightnesses.into_iter().sum()
+fn part2(instructions: Instructions) -> u64 {
+    let mut bulbs = Array2::from_elem((1000, 1000), 0u64);
+    instructions.execute(&mut bulbs, |operation, bulb| {
+        let change : i64 = match &operation {
+            Operation::Toggle => 2,
+            Operation::On => 1,
+            Operation::Off => -1,
+        };
+        *bulb = bulb.saturating_add_signed(change);
+    });
+    bulbs.into_iter().sum()
 }
