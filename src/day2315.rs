@@ -16,11 +16,12 @@ fn hash(s: &str) -> usize {
 }
 
 fn part2(instructions: Instructions) -> usize {
-    let mut state = State::new();
-    state.run_all(instructions);
-    state.power()
+    let mut bins = Bins::new();
+    bins.run_all(instructions);
+    bins.power()
 }
 
+#[derive(Deref, DerefMut)]
 struct Instructions(Vec<Instruction>);
 
 struct Instruction(Key, Operation);
@@ -30,43 +31,39 @@ enum Operation {
     Insert(Val),
 }
 
-type Key = String;
-type Val = usize;
+#[derive(Clone, PartialEq)]
+struct Key(String);
 
-impl FromStr for Instructions {
-    type Err = anyhow::Error;
+#[derive(Clone)]
+struct Val(usize);
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use aoc_nom::*;
-        let remove = tag("-").into_str_parser().map(|_| Operation::Remove);
-        let insert = preceded(tag("="), u32).map(|i| Operation::Insert(i as Val));
-        let instruction = tuple((alpha1, alt((remove, insert))));
-        let instruction = instruction.map(|(s, op)| Instruction(s.to_string(), op));
-        let instructions = separated_list1(tag(","), instruction).map(Instructions);
-        let instructions = terminated(instructions, eof);
-        instructions.anyhow(s)
+#[derive(Deref, DerefMut)]
+struct Bins(Vec<Vec<(Key, Val)>>);
+
+impl Key {
+    fn hash(&self) -> usize {
+        hash(self.0.as_str())
     }
 }
 
-struct State {
-    bins: Vec<Vec<(String, usize)>>,
-}
-
-impl State {
-    fn new() -> State {
-        State {
-            bins: vec![vec![]; 256],
-        }
+impl Bins {
+    fn new() -> Bins {
+        Bins(vec![vec![]; 256])
     }
 
     fn run(&mut self, Instruction(key, operation): Instruction) {
-        let bin = &mut self.bins[hash(&key)];
-        let mut evict = None;
+        let bin = &mut self[key.hash()];
+
+        // Rust, very sensibly, doesn't like us modifying a collection while
+        // we're iterating over it, so instead we make a note of which entry in
+        // a bin to remove (if any) once the loop is over.
+        let mut remove_after_loop: Option<usize> = None;
+
         for (i, (bin_key, bin_val)) in bin.iter_mut().enumerate() {
             if &key == bin_key {
                 match operation {
                     Operation::Remove => {
-                        let _ = evict.insert(i);
+                        let _ = remove_after_loop.insert(i);
                         break;
                     }
                     Operation::Insert(val) => {
@@ -76,7 +73,7 @@ impl State {
                 }
             }
         }
-        if let Some(i) = evict {
+        if let Some(i) = remove_after_loop {
             bin.remove(i);
         }
         if let Operation::Insert(val) = operation {
@@ -85,18 +82,33 @@ impl State {
     }
 
     fn run_all(&mut self, instructions: Instructions) {
-        for instruction in instructions.0 {
+        for instruction in instructions.0.into_iter() {
             self.run(instruction);
         }
     }
 
-    fn power(&self) -> usize {
+    fn power(self) -> usize {
         let mut power = 0;
-        for (case_i, case) in self.bins.iter().enumerate() {
-            for (slot_i, (_, focal_length)) in case.iter().enumerate() {
-                power += (case_i + 1) * (slot_i + 1) * focal_length;
+        for (case_i, case) in self.0.into_iter().enumerate() {
+            for (slot_i, (_, focal_length)) in case.into_iter().enumerate() {
+                power += (case_i + 1) * (slot_i + 1) * focal_length.0;
             }
         }
         power
+    }
+}
+
+impl FromStr for Instructions {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use aoc_nom::*;
+        let remove = tag("-").into_str_parser().map(|_| Operation::Remove);
+        let insert = preceded(tag("="), u32).map(|i| Operation::Insert(Val(i as usize)));
+        let instruction = tuple((alpha1, alt((remove, insert))));
+        let instruction = instruction.map(|(s, op)| Instruction(Key(String::from(s)), op));
+        let instructions = separated_list1(tag(","), instruction).map(Instructions);
+        let instructions = terminated(instructions, eof);
+        instructions.anyhow(s)
     }
 }

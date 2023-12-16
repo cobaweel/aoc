@@ -1,5 +1,5 @@
 pub use anyhow::anyhow;
-pub use derive_more::{From, Into};
+pub use derive_more::{Deref, DerefMut, From, Into};
 pub use itertools::Itertools;
 pub use std::cmp::{max, min};
 pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
