@@ -1,6 +1,14 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
+// By default, `cargo doc --all` generates cross-referenced docs for all
+// dependencies *except* the standard library. This adds in the standard
+// library. See also:
+// https://github.com/rust-lang/rfcs/issues/2324#issuecomment-502437904
+#[doc(inline)]
+pub use std;
+
+
 mod util;
 
 mod day1501;
