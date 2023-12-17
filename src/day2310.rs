@@ -32,8 +32,8 @@ enum Tile {
 }
 
 impl Tile {
-    fn directions(&self) -> Vec<Direction> {
-        use Direction::*;
+    fn directions(&self) -> Vec<Dir> {
+        use Dir::*;
         match self {
             Tile::NS => vec![N, S],
             Tile::EW => vec![E, W],
@@ -46,52 +46,9 @@ impl Tile {
     }
 }
 
-#[derive(PartialEq, Eq, Copy, Clone, Debug, EnumIter)]
-enum Direction {
-    N,
-    E,
-    S,
-    W,
-}
-
-impl Direction {
-    fn opposite(self) -> Self {
-        match self {
-            Direction::N => Direction::S,
-            Direction::E => Direction::W,
-            Direction::S => Direction::N,
-            Direction::W => Direction::E,
-        }
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Eq, Clone, Copy, Hash)]
-struct Pos(usize, usize);
+use aoc_grid::*;
 
 struct Dim(Range<usize>, Range<usize>);
-
-impl Pos {
-    fn contains(self, other: Self) -> bool {
-        (0..self.0).contains(&other.0) && (0..self.1).contains(&other.1)
-    }
-
-    fn walk(self, direction: Direction, dim: Pos) -> Option<Self> {
-        let Pos(row, col) = self;
-        let (row, col) = match direction {
-            Direction::N => (row.checked_sub(1), Some(col)),
-            Direction::E => (Some(row), col.checked_add(1)),
-            Direction::S => (row.checked_add(1), Some(col)),
-            Direction::W => (Some(row), col.checked_sub(1)),
-        };
-        if let (Some(row), Some(col)) = (row, col) {
-            let pos = Pos(row, col);
-            dim.contains(pos).then_some(pos)
-        } else {
-            None
-        }
-    }
-}
-
 impl FromStr for Maze {
     type Err = anyhow::Error;
 
@@ -136,10 +93,10 @@ impl Maze {
     }
 
     fn reveal_hidden_tile(&mut self, pos: Pos) {
-        use Direction::*;
+        use Dir::*;
         use Tile::*;
         let dim = self.dim();
-        let connections = Direction::iter()
+        let connections = Dir::iter()
             .map(|direction| {
                 pos.walk(direction, dim)
                     .map(|pos| {
@@ -171,7 +128,7 @@ impl Maze {
         }
     }
 
-    fn walk_from(&self, prev: Pos, pos: Pos) -> (Direction, Pos) {
+    fn walk_from(&self, prev: Pos, pos: Pos) -> (Dir, Pos) {
         let dim = self.dim();
         self.at(pos)
             .into_iter()
@@ -184,11 +141,11 @@ impl Maze {
             .expect("bad maze")
     }
 
-    fn path(&mut self) -> (Vec<Pos>, Vec<Direction>) {
+    fn path(&mut self) -> (Vec<Pos>, Vec<Dir>) {
         let fst = self.find_animal();
         let prv = fst;
         let (direction, cur) = self.walk_from(prv, prv);
-        let (positions, directions): (Vec<Pos>, Vec<Direction>) =
+        let (positions, directions): (Vec<Pos>, Vec<Dir>) =
             itertools::iterate((prv, direction, cur), |&(prv, _direction, cur)| {
                 let (direction, nxt) = self.walk_from(prv, cur);
                 (cur, direction, nxt)

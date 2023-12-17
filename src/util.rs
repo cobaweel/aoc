@@ -133,3 +133,52 @@ pub mod aoc {
         Ok(array)
     }
 }
+
+pub mod aoc_grid {
+    use strum::EnumIter;
+    use super::*;
+
+    #[derive(PartialEq, Eq, Copy, Clone, Debug, EnumIter, Hash)]
+    pub enum Dir {
+        N,
+        E,
+        S,
+        W,
+    }
+
+    impl Dir {
+        pub fn opposite(self) -> Self {
+            match self {
+                Dir::N => Dir::S,
+                Dir::E => Dir::W,
+                Dir::S => Dir::N,
+                Dir::W => Dir::E,
+            }
+        }
+    }
+
+    #[derive(Debug, Default, PartialEq, Eq, Clone, Copy, Hash, From)]
+    pub struct Pos(pub usize, pub usize);
+
+    impl Pos {
+        pub fn contains(self, other: Self) -> bool {
+            (0..self.0).contains(&other.0) && (0..self.1).contains(&other.1)
+        }
+
+        pub fn walk(self, direction: Dir, dim: Pos) -> Option<Self> {
+            let Pos(row, col) = self;
+            let (row, col) = match direction {
+                Dir::N => (row.checked_sub(1), Some(col)),
+                Dir::E => (Some(row), col.checked_add(1)),
+                Dir::S => (row.checked_add(1), Some(col)),
+                Dir::W => (Some(row), col.checked_sub(1)),
+            };
+            if let (Some(row), Some(col)) = (row, col) {
+                let pos = Pos(row, col);
+                dim.contains(pos).then_some(pos)
+            } else {
+                None
+            }
+        }
+    }
+}

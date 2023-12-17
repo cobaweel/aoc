@@ -77,7 +77,7 @@ fn part1(instructions: Instructions) -> usize {
 fn part2(instructions: Instructions) -> u64 {
     let mut bulbs = Array2::from_elem((1000, 1000), 0u64);
     instructions.execute(&mut bulbs, |operation, bulb| {
-        let change : i64 = match &operation {
+        let change: i64 = match &operation {
             Operation::Toggle => 2,
             Operation::On => 1,
             Operation::Off => -1,
