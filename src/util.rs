@@ -135,8 +135,8 @@ pub mod aoc {
 }
 
 pub mod aoc_grid {
-    use strum::EnumIter;
     use super::*;
+    use strum::EnumIter;
 
     #[derive(PartialEq, Eq, Copy, Clone, Debug, EnumIter, Hash)]
     pub enum Dir {
