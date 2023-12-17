@@ -8,7 +8,6 @@
 #[doc(inline)]
 pub use std;
 
-
 mod util;
 
 mod day1501;
